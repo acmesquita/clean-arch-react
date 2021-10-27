@@ -5,7 +5,11 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "test": "jest --passWithNoTests --no-cache --runInBand",
+    "test:watch": "yarn test -- --watch",
+    "check": "npm-check -u -s",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
