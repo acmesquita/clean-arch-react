@@ -7,4 +7,4 @@ const Spinner: React.FC<Props> = (props: Props) => (
   <div {...props} className={[styles.ldsDualRing, props.className].join(' ')}></div>
 )
 
-export { Spinner }
+export default Spinner

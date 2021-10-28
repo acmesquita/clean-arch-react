@@ -1,8 +1,5 @@
 import React from 'react'
-import { Spinner } from '@/presentation/components/spinner'
-import Header from '@/presentation/components/login-header'
-import Footer from '@/presentation/components/footer'
-import Input from '@/presentation/components/input'
+import { Header, Footer, Input, Spinner } from '@/presentation/components'
 import styles from './styles.scss'
 
 const Login: React.FC = () => {
