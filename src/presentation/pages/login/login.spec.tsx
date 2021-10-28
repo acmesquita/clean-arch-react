@@ -11,5 +11,11 @@ describe('Login', () => {
 
     const submitBtn = screen.getByTestId('submit-btn') as HTMLButtonElement
     expect(submitBtn.disabled).toBeTruthy()
+
+    const emailStatus = screen.getByTestId('email-status')
+    expect(emailStatus.title).toBe('Campo obrigatório')
+
+    const passwordStatus = screen.getByTestId('password-status')
+    expect(passwordStatus.title).toBe('Campo obrigatório')
   })
 })
