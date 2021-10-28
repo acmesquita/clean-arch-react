@@ -11,10 +11,10 @@ const Input: React.FC<Props> = (props: Props) => {
   }
 
   const handleChange = (event: React.FocusEvent<HTMLInputElement>): void => {
-    setState({
-      ...state,
+    setState(rest => ({
+      ...rest,
       [event.target.name]: event.target.value
-    })
+    }))
   }
 
   function getTitle (): string {
