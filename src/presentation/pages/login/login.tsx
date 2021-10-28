@@ -1,21 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Header, Footer, Input, LoginError } from '@/presentation/components'
+import { Validation } from '@/presentation/protocols/validation'
+import { FormLoginContext } from '@/presentation/context/form/form-context'
 import styles from './styles.scss'
 
-import { FormLoginContext, StateProps } from '@/presentation/context/form/form-context'
+type Props = {
+  validation: Validation
+}
 
-const Login: React.FC = () => {
-  const [state] = useState<StateProps>({
+const Login: React.FC<Props> = ({ validation }: Props) => {
+  const [state, setState] = useState({
     isLoading: false,
+    email: '',
+    password: '',
     errorMessage: '',
     emailError: 'Campo obrigatório',
     passwordError: 'Campo obrigatório'
   })
 
+  useEffect(() => {
+    validation.valid({ email: state.email })
+  }, [state.email])
+
+  useEffect(() => {
+    validation.valid({ password: state.password })
+  }, [state.password])
+
   return (
     <div className={styles.loginWrapper}>
       <Header />
-      <FormLoginContext.Provider value={state}>
+      <FormLoginContext.Provider value={{ state, setState }}>
         <form className={styles.form}>
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
