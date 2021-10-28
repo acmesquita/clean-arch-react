@@ -4,9 +4,12 @@ import { render, screen } from '@testing-library/react'
 import Login from './login'
 
 describe('Login', () => {
-  test('Should no render spinner when initialize Login page', () => {
+  test('Should start with initial state', () => {
     render(<Login />)
     const errorWrapper = screen.getByTestId('error-wrapper')
     expect(errorWrapper.childElementCount).toBe(0)
+
+    const submitBtn = screen.getByTestId('submit-btn') as HTMLButtonElement
+    expect(submitBtn.disabled).toBeTruthy()
   })
 })
