@@ -1,5 +1,6 @@
 import React from 'react'
-import { render, screen, fireEvent, cleanup } from '@testing-library/react'
+import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { ValidationStub } from '@/presentation/test'
 import Login from './login'
 import faker from 'faker'
@@ -95,5 +96,23 @@ describe('Login', () => {
 
     const submitBtn = screen.getByTestId('submit-btn') as HTMLButtonElement
     expect(submitBtn.disabled).toBeFalsy()
+  })
+
+  test('Should show spinner on submit', async () => {
+    makeSut()
+
+    const emailInput = screen.getByTestId('email')
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
+
+    const passwordInput = screen.getByTestId('password')
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
+
+    const submitBtn = screen.getByTestId('submit-btn')
+
+    await waitFor(() => {
+      userEvent.click(submitBtn)
+      const spinner = screen.findByTestId('spinner')
+      expect(spinner).toBeTruthy()
+    })
   })
 })
