@@ -7,8 +7,11 @@ import { FormLoginContext, StateProps } from '@/presentation/context/form/form-c
 const Login: React.FC = () => {
   const [state] = useState<StateProps>({
     isLoading: false,
-    errorMessage: ''
+    errorMessage: '',
+    emailError: 'Campo obrigatório',
+    passwordError: 'Campo obrigatório'
   })
+
   return (
     <div className={styles.loginWrapper}>
       <Header />
