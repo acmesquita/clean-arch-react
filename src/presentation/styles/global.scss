@@ -32,4 +32,14 @@ button {
   &:focus {
     outline-color: $primaryDark;
   }
+
+  &:disabled {
+    background-color: $disabled;
+    color: $disabledColor;
+    cursor: not-allowed;
+
+    &:hover {
+      filter: none;
+    }
+  }
 }
