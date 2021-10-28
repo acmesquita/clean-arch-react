@@ -79,4 +79,18 @@ describe('Login', () => {
     const passwordStatus = screen.getByTestId('password-status')
     expect(passwordStatus.className).not.toMatch('error')
   })
+
+  test('Should enable submit button if form is valid', () => {
+    const { validationStub } = makeSut()
+    validationStub.errorMessage = null
+
+    const emailInput = screen.getByTestId('email')
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
+
+    const passwordInput = screen.getByTestId('password')
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
+
+    const submitBtn = screen.getByTestId('submit-btn') as HTMLButtonElement
+    expect(submitBtn.disabled).toBeFalsy()
+  })
 })
