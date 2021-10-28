@@ -55,5 +55,28 @@ describe('Login', () => {
 
     const passwordStatus = screen.getByTestId('password-status')
     expect(passwordStatus.title).toBe(validationStub.errorMessage)
+    expect(passwordStatus.className).toMatch('error')
+  })
+
+  test('Should show valid emails state if Validation succeeds', () => {
+    const { validationStub } = makeSut()
+    validationStub.errorMessage = null
+
+    const emailInput = screen.getByTestId('email')
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
+
+    const emailStatus = screen.getByTestId('email-status')
+    expect(emailStatus.className).not.toMatch('error')
+  })
+
+  test('Should show valid password state if Validation succeeds', () => {
+    const { validationStub } = makeSut()
+    validationStub.errorMessage = null
+
+    const passwordInput = screen.getByTestId('password')
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
+
+    const passwordStatus = screen.getByTestId('password-status')
+    expect(passwordStatus.className).not.toMatch('error')
   })
 })
