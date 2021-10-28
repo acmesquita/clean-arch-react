@@ -1,11 +1,15 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
-
+import { render, RenderResult, screen } from '@testing-library/react'
 import Login from './login'
+
+const makeSut = (): void => {
+  render(<Login />)
+}
 
 describe('Login', () => {
   test('Should start with initial state', () => {
-    render(<Login />)
+    makeSut()
+
     const errorWrapper = screen.getByTestId('error-wrapper')
     expect(errorWrapper.childElementCount).toBe(0)
 
