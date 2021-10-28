@@ -1,0 +1,28 @@
+@import "../../styles/colors.scss";
+
+.ldsDualRing {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+
+  &:after {
+    content: " ";
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid $primaryLight;
+    border-color: $primaryLight transparent $primaryLight transparent;
+    animation: ldsDualRing 1.2s linear infinite;
+  }
+}
+
+@keyframes ldsDualRing {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

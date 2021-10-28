@@ -10,7 +10,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   resolve: {
-    extentions: ['.ts', '.tsx', '.scss', '.css', '.js'],
+    extensions: ['.ts', '.tsx', 'scss', '.js'],
     alias: {
       '@': path.join(__dirname, 'src')
     }
@@ -34,9 +34,14 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: './public',
-    writeToDisk: true,
-    historyApiFallback: true
+    devMiddleware: {
+      writeToDisk: true
+    },
+    static: {
+      directory: './public'
+    },
+    historyApiFallback: true,
+    port: 8080
   },
   externals: {
     react: 'React',
