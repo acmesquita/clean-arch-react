@@ -4,18 +4,35 @@ import userEvent from '@testing-library/user-event'
 import { ValidationStub } from '@/presentation/test'
 import Login from './login'
 import faker from 'faker'
+import { Authentication, AuthenticationParams } from '@/domain/usecases'
+import { AccountModel } from '@/domain/models'
+import { mockAccountModel } from '@/domain/test'
+
+class AuthenticationSpy implements Authentication {
+  params: object
+  account = mockAccountModel()
+
+  async auth (params: AuthenticationParams): Promise<AccountModel> {
+    this.params = params
+    return Promise.resolve(this.account)
+  }
+}
 
 type SutTypes = {
   validationStub: ValidationStub
+  authenticationSpy: AuthenticationSpy
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = null
 
-  render(<Login validation={validationStub} />)
+  const authenticationSpy = new AuthenticationSpy()
+
+  render(<Login validation={validationStub} authentication={authenticationSpy} />)
   return {
-    validationStub
+    validationStub,
+    authenticationSpy
   }
 }
 
@@ -24,10 +41,11 @@ describe('Login', () => {
 
   test('Should start with initial state', () => {
     const validationStub = new ValidationStub()
+    const authenticationSpy = new AuthenticationSpy()
     const errorMessage = faker.random.words(5)
     validationStub.errorMessage = errorMessage
 
-    render(<Login validation={validationStub} />)
+    render(<Login validation={validationStub} authentication={authenticationSpy} />)
 
     const errorWrapper = screen.getByTestId('error-wrapper')
     expect(errorWrapper.childElementCount).toBe(0)
@@ -113,6 +131,27 @@ describe('Login', () => {
       userEvent.click(submitBtn)
       const spinner = screen.findByTestId('spinner')
       expect(spinner).toBeTruthy()
+    })
+  })
+
+  test('Should calls Authentication with correct values', async () => {
+    const { authenticationSpy } = makeSut()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+
+    const emailInput = screen.getByTestId('email')
+    fireEvent.input(emailInput, { target: { value: email } })
+
+    const passwordInput = screen.getByTestId('password')
+    fireEvent.input(passwordInput, { target: { value: password } })
+
+    await waitFor(() => {
+      userEvent.click(screen.getByTestId('submit-btn'))
+
+      expect(authenticationSpy.params).toEqual({
+        email,
+        password
+      })
     })
   })
 })
