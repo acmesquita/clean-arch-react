@@ -141,4 +141,17 @@ describe('Login', () => {
       expect(authenticationSpy.callsCount).toBe(1)
     })
   })
+
+  test('Should not call Authentication if form is invalid', () => {
+    const validationStub = new ValidationStub()
+    const authenticationSpy = new AuthenticationSpy()
+    const errorMessage = faker.random.words(5)
+    validationStub.errorMessage = errorMessage
+
+    render(<Login validation={validationStub} authentication={authenticationSpy} />)
+
+    populateEmailField()
+    fireEvent.submit(screen.getByTestId('form'))
+    expect(authenticationSpy.callsCount).toBe(0)
+  })
 })
