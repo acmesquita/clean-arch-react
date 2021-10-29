@@ -33,12 +33,12 @@ const populatePasswordField = (password = faker.internet.password()): void => {
   fireEvent.input(passwordInput, { target: { value: password } })
 }
 
-const simulateValidSubmit = async (callback: () => void, email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
+const simulateValidSubmit = async (callback?: () => void, email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
   populateEmailField(email)
   populatePasswordField(password)
   await waitFor(() => {
     userEvent.click(screen.getByTestId('submit-btn'))
-    callback()
+    if (callback) callback()
   })
 }
 
@@ -131,5 +131,14 @@ describe('Login', () => {
         password
       })
     }, email, password)
+  })
+
+  test('Should calls Authentication only once', async () => {
+    const { authenticationSpy } = makeSut()
+
+    await simulateValidSubmit()
+    await simulateValidSubmit(() => {
+      expect(authenticationSpy.callsCount).toBe(1)
+    })
   })
 })
