@@ -4,6 +4,7 @@ import { Header, Footer, Input, LoginError } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation'
 import { FormLoginContext } from '@/presentation/context/form/form-context'
 import styles from './styles.scss'
+import { Link } from 'react-router-dom'
 
 type Props = {
   validation: Validation
@@ -61,7 +62,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" id="password" placeholder="Digite sua senha" />
           <button data-testid="submit-btn" disabled={!!state.emailError || !!state.passwordError} type="submit">Entrar</button>
-          <span className={styles.link}>Criar conta</span>
+          <Link to="signup" data-testid="register" className={styles.link}>Criar conta</Link>
 
           <LoginError />
         </form>
