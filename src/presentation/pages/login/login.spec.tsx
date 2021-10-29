@@ -1,5 +1,6 @@
 import React from 'react'
 import faker from 'faker'
+import 'jest-localstorage-mock'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
@@ -46,6 +47,7 @@ const simulateValidSubmit = async (callback?: () => void, email = faker.internet
 
 describe('Login', () => {
   afterEach(cleanup)
+  beforeEach(localStorage.clear)
 
   test('Should start with initial state', () => {
     const validationStub = new ValidationStub()
@@ -155,5 +157,15 @@ describe('Login', () => {
     populateEmailField()
     fireEvent.submit(screen.getByTestId('form'))
     expect(authenticationSpy.callsCount).toBe(0)
+  })
+
+  test('Should add accessToken to localStorage on success', async () => {
+    const { authenticationSpy } = makeSut()
+
+    await simulateValidSubmit()
+
+    await waitFor(() => { screen.getByTestId('form') })
+
+    expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
   })
 })
