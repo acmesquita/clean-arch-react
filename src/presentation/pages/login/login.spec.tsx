@@ -7,6 +7,7 @@ import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/re
 import userEvent from '@testing-library/user-event'
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
 import Login from './login'
+import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   validationStub: ValidationStub
@@ -43,15 +44,12 @@ const populatePasswordField = (password = faker.internet.password()): void => {
   fireEvent.input(passwordInput, { target: { value: password } })
 }
 
-const simulateValidSubmit = async (callback?: () => void, email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
+const simulateValidSubmit = async (email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
   populateEmailField(email)
   populatePasswordField(password)
-  await waitFor(() => {
-    userEvent.click(screen.getByTestId('submit-btn'))
-    if (callback) {
-      callback()
-    }
-  })
+  const form = screen.getByTestId('form')
+  fireEvent.submit(form)
+  await waitFor(() => form)
 }
 
 describe('Login', () => {
@@ -131,10 +129,10 @@ describe('Login', () => {
   test('Should show spinner on submit', async () => {
     makeSut()
 
-    await simulateValidSubmit(() => {
-      const spinner = screen.findByTestId('spinner')
-      expect(spinner).toBeTruthy()
-    })
+    await simulateValidSubmit()
+
+    const spinner = screen.findByTestId('spinner')
+    expect(spinner).toBeTruthy()
   })
 
   test('Should calls Authentication with correct values', async () => {
@@ -142,21 +140,21 @@ describe('Login', () => {
     const email = faker.internet.email()
     const password = faker.internet.password()
 
-    await simulateValidSubmit(() => {
-      expect(authenticationSpy.params).toEqual({
-        email,
-        password
-      })
-    }, email, password)
+    await simulateValidSubmit(email, password)
+
+    expect(authenticationSpy.params).toEqual({
+      email,
+      password
+    })
   })
 
   test('Should calls Authentication only once', async () => {
     const { authenticationSpy } = makeSut()
 
     await simulateValidSubmit()
-    await simulateValidSubmit(() => {
-      expect(authenticationSpy.callsCount).toBe(1)
-    })
+    await simulateValidSubmit()
+
+    expect(authenticationSpy.callsCount).toBe(1)
   })
 
   test('Should not call Authentication if form is invalid', () => {
@@ -174,6 +172,21 @@ describe('Login', () => {
     populateEmailField()
     fireEvent.submit(screen.getByTestId('form'))
     expect(authenticationSpy.callsCount).toBe(0)
+  })
+
+  test('Should show errorMessager if Authentication fail', async () => {
+    const { authenticationSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(null)
+    const errorWrapper = screen.getByTestId('error-wrapper')
+
+    await simulateValidSubmit()
+
+    await waitFor(() => errorWrapper)
+    expect(errorWrapper.childElementCount).toBe(1)
+
+    const mainError = screen.getByTestId('main-error')
+    expect(mainError.textContent).toBe(error.message)
   })
 
   test('Should add accessToken to localStorage on success', async () => {
