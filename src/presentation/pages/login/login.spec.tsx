@@ -1,5 +1,7 @@
 import React from 'react'
 import faker from 'faker'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 import 'jest-localstorage-mock'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -11,13 +13,20 @@ type SutTypes = {
   authenticationSpy: AuthenticationSpy
 }
 
+const history = createMemoryHistory()
+
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = null
 
   const authenticationSpy = new AuthenticationSpy()
 
-  render(<Login validation={validationStub} authentication={authenticationSpy} />)
+  render(
+    <Router history={history}>
+      <Login validation={validationStub} authentication={authenticationSpy} />
+    </Router>
+  )
+
   return {
     validationStub,
     authenticationSpy
@@ -55,7 +64,11 @@ describe('Login', () => {
     const errorMessage = faker.random.words(5)
     validationStub.errorMessage = errorMessage
 
-    render(<Login validation={validationStub} authentication={authenticationSpy} />)
+    render(
+      <Router history={history}>
+        <Login validation={validationStub} authentication={authenticationSpy} />
+      </Router>
+    )
 
     const errorWrapper = screen.getByTestId('error-wrapper')
     expect(errorWrapper.childElementCount).toBe(0)
@@ -152,7 +165,11 @@ describe('Login', () => {
     const errorMessage = faker.random.words(5)
     validationStub.errorMessage = errorMessage
 
-    render(<Login validation={validationStub} authentication={authenticationSpy} />)
+    render(
+      <Router history={history}>
+        <Login validation={validationStub} authentication={authenticationSpy} />
+      </Router>
+    )
 
     populateEmailField()
     fireEvent.submit(screen.getByTestId('form'))
@@ -167,5 +184,15 @@ describe('Login', () => {
     await waitFor(() => { screen.getByTestId('form') })
 
     expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+  })
+
+  test('Should go to signUp page', () => {
+    makeSut()
+
+    const register = screen.getByTestId('register')
+
+    userEvent.click(register)
+    expect(history.length).toBe(2)
+    expect(history.location.pathname).toBe('/signup')
   })
 })
