@@ -14,12 +14,12 @@ type Props = {
 
 const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const history = useHistory()
+  const [mainError, setMainError] = useState('')
 
   const [state, setState] = useState({
     isLoading: false,
     email: '',
     password: '',
-    errorMessage: '',
     emailError: '',
     passwordError: ''
   })
@@ -40,27 +40,28 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       ...rest,
       isLoading: true
     }))
-    try {
-      const account = await authentication.auth({
-        email: state.email,
-        password: state.password
-      })
 
+    const account = await authentication.auth({
+      email: state.email,
+      password: state.password
+    })
+
+    if (account) {
       localStorage.setItem('accessToken', account.accessToken)
       history.replace('/')
-    } catch (error) {
-      setState(rest => ({
-        ...rest,
-        isLoading: false,
-        errorMessage: error.message
-      }))
+    } else {
+      setState({
+        ...state,
+        isLoading: false
+      })
+      setMainError('Credenciais inválidas')
     }
   }
 
   return (
     <div className={styles.loginWrapper}>
       <Header />
-      <FormLoginContext.Provider value={{ state, setState }}>
+      <FormLoginContext.Provider value={{ state, setState, mainError }}>
         <form data-testid="form" className={styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />

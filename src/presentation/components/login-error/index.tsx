@@ -4,12 +4,12 @@ import { Spinner } from '..'
 import styles from './styles.scss'
 
 const LoginError: React.FC = () => {
-  const { isLoading, errorMessage } = useContext(FormLoginContext)
+  const { isLoading, mainError } = useContext(FormLoginContext)
 
   return (
     <div data-testid="error-wrapper" className={styles.errorWrapper}>
       {isLoading && <Spinner className={styles.spinner}/>}
-      {errorMessage && <span data-testid="main-error" className={styles.error}>{errorMessage}</span>}
+      {mainError && <span data-testid="main-error" className={styles.error}>{mainError}</span>}
     </div>
   )
 }
