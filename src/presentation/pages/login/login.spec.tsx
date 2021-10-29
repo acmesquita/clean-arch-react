@@ -1,9 +1,9 @@
 import React from 'react'
+import faker from 'faker'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
 import Login from './login'
-import faker from 'faker'
 
 type SutTypes = {
   validationStub: ValidationStub
@@ -38,7 +38,9 @@ const simulateValidSubmit = async (callback?: () => void, email = faker.internet
   populatePasswordField(password)
   await waitFor(() => {
     userEvent.click(screen.getByTestId('submit-btn'))
-    if (callback) callback()
+    if (callback) {
+      callback()
+    }
   })
 }
 
