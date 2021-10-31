@@ -6,7 +6,7 @@ import 'jest-localstorage-mock'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
-import Login from './login'
+import { Login } from '@/presentation/pages'
 import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
