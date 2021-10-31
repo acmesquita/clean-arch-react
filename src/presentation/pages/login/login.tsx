@@ -15,9 +15,9 @@ type Props = {
 const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const history = useHistory()
   const [mainError, setMainError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const [state, setState] = useState({
-    isLoading: false,
     email: '',
     password: '',
     emailError: '',
@@ -34,39 +34,33 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
 
   async function handleSubmit (event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
-    if (state.isLoading || state.emailError || state.passwordError) return
+    if (isLoading || state.emailError || state.passwordError) return
 
-    setState(rest => ({
-      ...rest,
-      isLoading: true
-    }))
+    setIsLoading(true)
 
-    const account = await authentication.auth({
-      email: state.email,
-      password: state.password
-    })
+    try {
+      const account = await authentication.auth({
+        email: state.email,
+        password: state.password
+      })
 
-    if (account) {
       localStorage.setItem('accessToken', account.accessToken)
       history.replace('/')
-    } else {
-      setState({
-        ...state,
-        isLoading: false
-      })
-      setMainError('Credenciais inválidas')
+    } catch (error) {
+      setIsLoading(false)
+      setMainError(error.message)
     }
   }
 
   return (
     <div className={styles.loginWrapper}>
       <Header />
-      <FormLoginContext.Provider value={{ state, setState, mainError }}>
+      <FormLoginContext.Provider value={{ state, setState, mainError, isLoading }}>
         <form data-testid="form" className={styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" id="password" placeholder="Digite sua senha" />
-          <button data-testid="submit-btn" disabled={!!state.emailError || !!state.passwordError} type="submit">Entrar</button>
+          <button data-testid="submit-btn" disabled={isLoading || !!state.emailError || !!state.passwordError} type="submit">Entrar</button>
           <Link to="signup" data-testid="register" className={styles.link}>Criar conta</Link>
 
           <LoginError />

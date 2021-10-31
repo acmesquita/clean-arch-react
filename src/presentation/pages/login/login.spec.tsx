@@ -177,7 +177,7 @@ describe('Login', () => {
   test('Should show errorMessager if Authentication fail', async () => {
     const { authenticationSpy } = makeSut()
     const error = new InvalidCredentialsError()
-    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(null)
+    jest.spyOn(authenticationSpy, 'auth').mockRejectedValueOnce(error)
     const errorWrapper = screen.getByTestId('error-wrapper')
 
     await simulateValidSubmit()
