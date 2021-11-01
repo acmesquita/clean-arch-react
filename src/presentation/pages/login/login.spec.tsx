@@ -2,16 +2,16 @@ import React from 'react'
 import faker from 'faker'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import 'jest-localstorage-mock'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
+import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock } from '@/presentation/test'
 import { Login } from '@/presentation/pages'
 import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   validationStub: ValidationStub
   authenticationSpy: AuthenticationSpy
+  saveAccessTokenMock: SaveAccessTokenMock
 }
 
 const history = createMemoryHistory({ initialEntries: ['/login'] })
@@ -22,15 +22,18 @@ const makeSut = (): SutTypes => {
 
   const authenticationSpy = new AuthenticationSpy()
 
+  const saveAccessTokenMock = new SaveAccessTokenMock()
+
   render(
     <Router history={history}>
-      <Login validation={validationStub} authentication={authenticationSpy} />
+      <Login validation={validationStub} authentication={authenticationSpy} saveAccessToken={saveAccessTokenMock}/>
     </Router>
   )
 
   return {
     validationStub,
-    authenticationSpy
+    authenticationSpy,
+    saveAccessTokenMock
   }
 }
 
@@ -54,17 +57,17 @@ const simulateValidSubmit = async (email = faker.internet.email(), password = fa
 
 describe('Login', () => {
   afterEach(cleanup)
-  beforeEach(localStorage.clear)
 
   test('Should start with initial state', () => {
     const validationStub = new ValidationStub()
     const authenticationSpy = new AuthenticationSpy()
+    const saveAccessTokenMock = new SaveAccessTokenMock()
     const errorMessage = faker.random.words(5)
     validationStub.errorMessage = errorMessage
 
     render(
       <Router history={history}>
-        <Login validation={validationStub} authentication={authenticationSpy} />
+        <Login validation={validationStub} authentication={authenticationSpy} saveAccessToken={saveAccessTokenMock} />
       </Router>
     )
 
@@ -160,12 +163,13 @@ describe('Login', () => {
   test('Should not call Authentication if form is invalid', () => {
     const validationStub = new ValidationStub()
     const authenticationSpy = new AuthenticationSpy()
+    const saveAccessTokenMock = new SaveAccessTokenMock()
     const errorMessage = faker.random.words(5)
     validationStub.errorMessage = errorMessage
 
     render(
       <Router history={history}>
-        <Login validation={validationStub} authentication={authenticationSpy} />
+        <Login validation={validationStub} authentication={authenticationSpy} saveAccessToken={saveAccessTokenMock} />
       </Router>
     )
 
@@ -189,14 +193,29 @@ describe('Login', () => {
     expect(mainError.textContent).toBe(error.message)
   })
 
-  test('Should add accessToken to localStorage on success', async () => {
-    const { authenticationSpy } = makeSut()
+  test('Should show errorMessager if SaveAccessToken fail', async () => {
+    const { saveAccessTokenMock } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(saveAccessTokenMock, 'save').mockRejectedValueOnce(error)
+    const errorWrapper = screen.getByTestId('error-wrapper')
+
+    await simulateValidSubmit()
+
+    await waitFor(() => errorWrapper)
+    expect(errorWrapper.childElementCount).toBe(1)
+
+    const mainError = screen.getByTestId('main-error')
+    expect(mainError.textContent).toBe(error.message)
+  })
+
+  test('Should call SaveAccessToken with correct value', async () => {
+    const { authenticationSpy, saveAccessTokenMock } = makeSut()
 
     await simulateValidSubmit()
 
     await waitFor(() => { screen.getByTestId('form') })
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+    expect(saveAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken)
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
   })
