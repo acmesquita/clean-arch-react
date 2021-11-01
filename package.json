@@ -1,6 +1,8 @@
 {
   "name": "clean-react",
   "version": "1.0.0",
+  "description": "Clean Archetecture in projects React",
+  "author": "Catharina Mesquita <catha.ana.1994@gmail.com>",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
