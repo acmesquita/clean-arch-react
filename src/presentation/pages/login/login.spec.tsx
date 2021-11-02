@@ -4,7 +4,7 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock } from '@/presentation/test'
+import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock, Helper } from '@/presentation/test'
 import { Login } from '@/presentation/pages'
 import { InvalidCredentialsError } from '@/domain/errors'
 
@@ -71,37 +71,27 @@ describe('Login', () => {
       </Router>
     )
 
-    const errorWrapper = screen.getByTestId('error-wrapper')
-    expect(errorWrapper.childElementCount).toBe(0)
-
-    const emailStatus = screen.getByTestId('email-status')
-    expect(emailStatus.title).toBe(errorMessage)
-
-    const passwordStatus = screen.getByTestId('password-status')
-    expect(passwordStatus.title).toBe(errorMessage)
-
-    const submitBtn = screen.getByTestId('submit-btn') as HTMLButtonElement
-    expect(submitBtn.disabled).toBeTruthy()
+    Helper.testChildCount('error-wrapper', 0)
+    Helper.testStatusForField('email', errorMessage)
+    Helper.testStatusForField('password', errorMessage)
+    Helper.testButtonIsDisabled('submit-btn', true)
   })
 
   test('Should show email error if validation fails', () => {
+    const errorMessage = faker.random.words(5)
     const { validationStub } = makeSut()
-    validationStub.errorMessage = faker.random.words(5)
-
+    validationStub.errorMessage = errorMessage
     populateEmailField()
-
-    const emailStatus = screen.getByTestId('email-status')
-    expect(emailStatus.title).toBe(validationStub.errorMessage)
+    Helper.testStatusForField('email', errorMessage)
   })
 
   test('Should show password error if validation fails', () => {
+    const errorMessage = faker.random.words(5)
     const { validationStub } = makeSut()
-    validationStub.errorMessage = faker.random.words(5)
-    populatePasswordField()
+    validationStub.errorMessage = errorMessage
 
-    const passwordStatus = screen.getByTestId('password-status')
-    expect(passwordStatus.title).toBe(validationStub.errorMessage)
-    expect(passwordStatus.className).toMatch('error')
+    populatePasswordField()
+    Helper.testStatusForField('password', errorMessage)
   })
 
   test('Should show valid emails state if Validation succeeds', () => {
@@ -124,9 +114,7 @@ describe('Login', () => {
     makeSut()
     populateEmailField()
     populatePasswordField()
-
-    const submitBtn = screen.getByTestId('submit-btn') as HTMLButtonElement
-    expect(submitBtn.disabled).toBeFalsy()
+    Helper.testButtonIsDisabled('submit-btn', false)
   })
 
   test('Should show spinner on submit', async () => {
@@ -187,7 +175,7 @@ describe('Login', () => {
     await simulateValidSubmit()
 
     await waitFor(() => errorWrapper)
-    expect(errorWrapper.childElementCount).toBe(1)
+    Helper.testChildCount('error-wrapper', 1)
 
     const mainError = screen.getByTestId('main-error')
     expect(mainError.textContent).toBe(error.message)
@@ -202,7 +190,7 @@ describe('Login', () => {
     await simulateValidSubmit()
 
     await waitFor(() => errorWrapper)
-    expect(errorWrapper.childElementCount).toBe(1)
+    Helper.testChildCount('error-wrapper', 1)
 
     const mainError = screen.getByTestId('main-error')
     expect(mainError.textContent).toBe(error.message)
