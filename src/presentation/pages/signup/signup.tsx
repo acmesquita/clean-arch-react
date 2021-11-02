@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import { Header, Footer, Input, LoginError } from '@/presentation/components'
+import { Validation } from '@/presentation/protocols/validation'
 import { FormLoginContext } from '@/presentation/context/form/form-context'
 import styles from './styles.scss'
 
-type Props = {}
+type Props = {
+  validation: Validation
+}
 
-const SignUp: React.FC<Props> = (props: Props) => {
+const SignUp: React.FC<Props> = ({ validation }: Props) => {
   const [mainError, setMainError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -16,8 +18,20 @@ const SignUp: React.FC<Props> = (props: Props) => {
     password: '',
     passwordConfirmation: '',
     emailError: '',
-    passwordError: ''
+    passwordError: '',
+    passwordConfirmationError: '',
+    nameError: ''
   })
+
+  useEffect(() => {
+    setState(rest => ({
+      ...rest,
+      nameError: validation.validate('name', state.name),
+      emailError: validation.validate('email', state.email),
+      passwordError: validation.validate('password', state.password),
+      passwordConfirmationError: validation.validate('passwordConfirmation', state.passwordConfirmation)
+    }))
+  }, [state.name, state.email, state.password, state.passwordConfirmation])
 
   async function handleSubmit (event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
@@ -32,9 +46,9 @@ const SignUp: React.FC<Props> = (props: Props) => {
           <Input type="text" name="name" placeholder="Digite seu nome" />
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" id="password" placeholder="Digite sua senha" />
-          <Input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirme sua senha" />
-          <button type="submit">Entrar</button>
-          <Link to="signup" data-testid="register" className={styles.link}>Voltar para o Login</Link>
+          <Input type="password" name="passwordConfirmation" id="passwordConfirmation" placeholder="Confirme sua senha" />
+          <button data-testid="submit" disabled={true} type="submit">Criar conta</button>
+          <span className={styles.link}>Voltar para o Login</span>
 
           <LoginError />
         </form>
