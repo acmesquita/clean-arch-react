@@ -3,12 +3,14 @@ import { Header, Footer, Input, LoginError } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation'
 import { FormLoginContext } from '@/presentation/context/form/form-context'
 import styles from './styles.scss'
+import { AddAccount } from '@/domain/usecases'
 
 type Props = {
   validation: Validation
+  addAccount: AddAccount
 }
 
-const SignUp: React.FC<Props> = ({ validation }: Props) => {
+const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
   const [mainError, setMainError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -36,6 +38,17 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
   async function handleSubmit (event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
     setIsLoading(true)
+
+    try {
+      await addAccount.add({
+        name: state.name,
+        email: state.email,
+        password: state.password,
+        passwordConfirmation: state.passwordConfirmation
+      })
+    } catch (error) {
+
+    }
   }
 
   const hasDisabled = !!state.nameError || !!state.emailError || !!state.passwordError || !!state.passwordConfirmationError
