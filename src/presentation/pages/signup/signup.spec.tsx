@@ -98,4 +98,15 @@ describe('SignUp Component', () => {
     const emailStatus = screen.getByTestId('passwordConfirmation-status')
     expect(emailStatus.className).not.toMatch('error')
   })
+
+  test('Should enable submit button if form is valid', async () => {
+    makeSut()
+    const password = faker.internet.password()
+    Helper.populateField('name')
+    Helper.populateField('email', faker.internet.email())
+    Helper.populateField('password', password)
+    Helper.populateField('passwordConfirmation', password)
+
+    Helper.testButtonIsDisabled('submit', false)
+  })
 })
