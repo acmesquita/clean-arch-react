@@ -22,6 +22,16 @@ const makeSut = (params?: SutParams): SutTypes => {
   }
 }
 
+const simulateValidSubmit = async (name = faker.name.findName(), email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
+  Helper.populateField('name', name)
+  Helper.populateField('email', email)
+  Helper.populateField('password', password)
+  Helper.populateField('passwordConfirmation', password)
+  const form = screen.getByTestId('form')
+  fireEvent.submit(form)
+  await waitFor(() => form)
+}
+
 describe('SignUp Component', () => {
   test('Should start with initial state', () => {
     const validationError = 'Campo obrigatório'
@@ -108,5 +118,11 @@ describe('SignUp Component', () => {
     Helper.populateField('passwordConfirmation', password)
 
     Helper.testButtonIsDisabled('submit', false)
+  })
+
+  test('Should show spinner on submit', async () => {
+    makeSut()
+    await simulateValidSubmit()
+    Helper.testIfElementExist('spinner')
   })
 })

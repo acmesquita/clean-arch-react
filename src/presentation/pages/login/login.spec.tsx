@@ -110,11 +110,8 @@ describe('Login', () => {
 
   test('Should show spinner on submit', async () => {
     makeSut()
-
     await simulateValidSubmit()
-
-    const spinner = screen.findByTestId('spinner')
-    expect(spinner).toBeTruthy()
+    Helper.testIfElementExist('spinner')
   })
 
   test('Should calls Authentication with correct values', async () => {
