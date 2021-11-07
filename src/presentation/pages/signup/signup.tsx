@@ -35,6 +35,7 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
 
   async function handleSubmit (event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
+    setIsLoading(true)
   }
 
   const hasDisabled = !!state.nameError || !!state.emailError || !!state.passwordError || !!state.passwordConfirmationError
@@ -43,7 +44,7 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
     <div className={styles.signUpWrapper}>
       <Header />
       <FormLoginContext.Provider value={{ state, setState, mainError, isLoading }}>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit} data-testid="form">
           <h2>Criar Conta</h2>
           <Input type="text" name="name" placeholder="Digite seu nome" />
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
