@@ -1,4 +1,5 @@
-import { screen } from '@testing-library/dom'
+import faker from 'faker'
+import { fireEvent, screen } from '@testing-library/dom'
 
 export const testChildCount = (field: string, count: number): void => {
   const fieldEl = screen.getByTestId(field)
@@ -14,4 +15,9 @@ export const testStatusForField = (fieldName: string, validationError?: string):
   const fieldEl = screen.getByTestId(`${fieldName}-status`)
   expect(fieldEl.title).toBe(validationError)
   expect(fieldEl.className).toMatch('error')
+}
+
+export const populateField = (fieldName: string, value = faker.random.word()): void => {
+  const input = screen.getByTestId(fieldName)
+  fireEvent.input(input, { target: { value } })
 }

@@ -37,19 +37,9 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const populateEmailField = (email = faker.internet.email()): void => {
-  const emailInput = screen.getByTestId('email')
-  fireEvent.input(emailInput, { target: { value: email } })
-}
-
-const populatePasswordField = (password = faker.internet.password()): void => {
-  const passwordInput = screen.getByTestId('password')
-  fireEvent.input(passwordInput, { target: { value: password } })
-}
-
 const simulateValidSubmit = async (email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
-  populateEmailField(email)
-  populatePasswordField(password)
+  Helper.populateField('email', email)
+  Helper.populateField('password', password)
   const form = screen.getByTestId('form')
   fireEvent.submit(form)
   await waitFor(() => form)
@@ -81,7 +71,7 @@ describe('Login', () => {
     const errorMessage = faker.random.words(5)
     const { validationStub } = makeSut()
     validationStub.errorMessage = errorMessage
-    populateEmailField()
+    Helper.populateField('email', faker.internet.email())
     Helper.testStatusForField('email', errorMessage)
   })
 
@@ -90,13 +80,13 @@ describe('Login', () => {
     const { validationStub } = makeSut()
     validationStub.errorMessage = errorMessage
 
-    populatePasswordField()
+    Helper.populateField('password', faker.internet.password())
     Helper.testStatusForField('password', errorMessage)
   })
 
   test('Should show valid emails state if Validation succeeds', () => {
     makeSut()
-    populateEmailField()
+    Helper.populateField('email', faker.internet.email())
 
     const emailStatus = screen.getByTestId('email-status')
     expect(emailStatus.className).not.toMatch('error')
@@ -104,7 +94,7 @@ describe('Login', () => {
 
   test('Should show valid password state if Validation succeeds', () => {
     makeSut()
-    populatePasswordField()
+    Helper.populateField('password', faker.internet.password())
 
     const passwordStatus = screen.getByTestId('password-status')
     expect(passwordStatus.className).not.toMatch('error')
@@ -112,8 +102,9 @@ describe('Login', () => {
 
   test('Should enable submit button if form is valid', () => {
     makeSut()
-    populateEmailField()
-    populatePasswordField()
+    Helper.populateField('email', faker.internet.email())
+    Helper.populateField('password', faker.internet.password())
+
     Helper.testButtonIsDisabled('submit-btn', false)
   })
 
@@ -161,7 +152,7 @@ describe('Login', () => {
       </Router>
     )
 
-    populateEmailField()
+    Helper.populateField('email', faker.internet.email())
     fireEvent.submit(screen.getByTestId('form'))
     expect(authenticationSpy.callsCount).toBe(0)
   })

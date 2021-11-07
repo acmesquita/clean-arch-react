@@ -22,11 +22,6 @@ const makeSut = (params?: SutParams): SutTypes => {
   }
 }
 
-const populateField = (fieldName: string, value = faker.random.word()): void => {
-  const input = screen.getByTestId(fieldName)
-  fireEvent.input(input, { target: { value } })
-}
-
 describe('SignUp Component', () => {
   test('Should start with initial state', () => {
     const validationError = 'Campo obrigatório'
@@ -44,7 +39,7 @@ describe('SignUp Component', () => {
     const validationError = faker.random.words(5)
     makeSut({ validationError })
 
-    populateField('name')
+    Helper.populateField('name')
     Helper.testStatusForField('name', validationError)
   })
 })
