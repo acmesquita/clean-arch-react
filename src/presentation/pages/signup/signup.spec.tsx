@@ -42,4 +42,12 @@ describe('SignUp Component', () => {
     Helper.populateField('name')
     Helper.testStatusForField('name', validationError)
   })
+
+  test('Should show email error if Validation fails', () => {
+    const validationError = faker.random.words(5)
+    makeSut({ validationError })
+
+    Helper.populateField('email')
+    Helper.testStatusForField('email', validationError)
+  })
 })
