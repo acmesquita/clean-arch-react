@@ -37,6 +37,8 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
     event.preventDefault()
   }
 
+  const hasDisabled = !!state.nameError || !!state.emailError || !!state.passwordError || !!state.passwordConfirmationError
+
   return (
     <div className={styles.signUpWrapper}>
       <Header />
@@ -47,7 +49,7 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" id="password" placeholder="Digite sua senha" />
           <Input type="password" name="passwordConfirmation" id="passwordConfirmation" placeholder="Confirme sua senha" />
-          <button data-testid="submit" disabled={true} type="submit">Criar conta</button>
+          <button data-testid="submit" disabled={hasDisabled} type="submit">Criar conta</button>
           <span className={styles.link}>Voltar para o Login</span>
 
           <LoginError />
