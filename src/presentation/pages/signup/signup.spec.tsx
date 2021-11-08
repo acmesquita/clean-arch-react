@@ -6,6 +6,7 @@ import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/re
 import { SignUp } from '@/presentation/pages'
 import { ValidationStub , Helper, AddAccountSpy, SaveAccessTokenMock } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
+import userEvent from '@testing-library/user-event'
 
 type SutTypes = {
   validationStub: ValidationStub
@@ -215,5 +216,15 @@ describe('SignUp Component', () => {
     await waitFor(() => errorWrapper)
     Helper.testChildCount('error-wrapper', 1)
     Helper.testTextContentElement('main-error', error.message)
+  })
+
+  test('Should go to login page', () => {
+    makeSut()
+
+    const loginLink = screen.getByTestId('login')
+
+    userEvent.click(loginLink)
+    expect(history.length).toBe(1)
+    expect(history.location.pathname).toBe('/login')
   })
 })
