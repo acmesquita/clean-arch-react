@@ -203,4 +203,17 @@ describe('SignUp Component', () => {
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
   })
+
+  test('Should show errorMessager if SaveAccessToken fail', async () => {
+    const { saveAccessTokenMock } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(saveAccessTokenMock, 'save').mockRejectedValueOnce(error)
+    const errorWrapper = screen.getByTestId('error-wrapper')
+
+    await simulateValidSubmit()
+
+    await waitFor(() => errorWrapper)
+    Helper.testChildCount('error-wrapper', 1)
+    Helper.testTextContentElement('main-error', error.message)
+  })
 })
