@@ -6,16 +6,18 @@
   },
   "extends": [
     "standard-with-typescript",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:cypress/recommended"
   ],
   "env": {
     "commonjs": true,
     "node": true,
     "browser": true,
     "es6": true,
-    "jest": true
+    "jest": true,
+    "cypress/globals": true
   },
-  "plugins": ["react"],
+  "plugins": ["react", "cypress"],
   "parserOptions": {
     "project": "./tsconfig-eslint.json"
   },

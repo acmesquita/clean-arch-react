@@ -13,10 +13,12 @@
     "test:watch": "yarn test --watch",
     "test:staged": "yarn test --findRelatedTests",
     "test:ci": "yarn test --coverage",
+    "test:cypress": "cypress open",
     "npm:check": "npx npm-check -u -s",
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@cypress/webpack-preprocessor": "^5.9.1",
     "@testing-library/dom": "^8.10.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -29,8 +31,10 @@
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.5.0",
+    "cypress": "^8.7.0",
     "eslint": "^8.1.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.1",
