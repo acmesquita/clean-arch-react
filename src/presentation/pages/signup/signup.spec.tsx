@@ -178,8 +178,6 @@ describe('SignUp Component', () => {
 
     await waitFor(() => errorWrapper)
     Helper.testChildCount('error-wrapper', 1)
-
-    const mainError = screen.getByTestId('main-error')
-    expect(mainError.textContent).toBe(error.message)
+    Helper.testTextContentElement('main-error', error.message)
   })
 })

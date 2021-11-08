@@ -164,9 +164,7 @@ describe('Login', () => {
 
     await waitFor(() => errorWrapper)
     Helper.testChildCount('error-wrapper', 1)
-
-    const mainError = screen.getByTestId('main-error')
-    expect(mainError.textContent).toBe(error.message)
+    Helper.testTextContentElement('main-error', error.message)
   })
 
   test('Should show errorMessager if SaveAccessToken fail', async () => {
@@ -179,9 +177,7 @@ describe('Login', () => {
 
     await waitFor(() => errorWrapper)
     Helper.testChildCount('error-wrapper', 1)
-
-    const mainError = screen.getByTestId('main-error')
-    expect(mainError.textContent).toBe(error.message)
+    Helper.testTextContentElement('main-error', error.message)
   })
 
   test('Should call SaveAccessToken with correct value', async () => {

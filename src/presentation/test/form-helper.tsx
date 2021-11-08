@@ -26,3 +26,8 @@ export const testIfElementExist = (fieldName: string): void => {
   const field = screen.findByTestId(fieldName)
   expect(field).toBeTruthy()
 }
+
+export const testTextContentElement = (fieldName: string, text: string): void => {
+  const el = screen.getByTestId(fieldName)
+  expect(el.textContent).toBe(text)
+}
