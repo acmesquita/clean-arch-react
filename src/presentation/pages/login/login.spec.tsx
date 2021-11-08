@@ -64,7 +64,7 @@ describe('Login', () => {
     Helper.testChildCount('error-wrapper', 0)
     Helper.testStatusForField('email', errorMessage)
     Helper.testStatusForField('password', errorMessage)
-    Helper.testButtonIsDisabled('submit-btn', true)
+    Helper.testButtonIsDisabled('submit', true)
   })
 
   test('Should show email error if validation fails', () => {
@@ -105,7 +105,7 @@ describe('Login', () => {
     Helper.populateField('email', faker.internet.email())
     Helper.populateField('password', faker.internet.password())
 
-    Helper.testButtonIsDisabled('submit-btn', false)
+    Helper.testButtonIsDisabled('submit', false)
   })
 
   test('Should show spinner on submit', async () => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
 import { Authentication, SaveAccessToken } from '@/domain/usecases'
-import { Header, Footer, Input, LoginError } from '@/presentation/components'
+import { Header, Footer, Input, LoginError, SubmitBtn } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation'
 import { FormLoginContext } from '@/presentation/context/form/form-context'
 import styles from './styles.scss'
@@ -22,20 +22,24 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
     email: '',
     password: '',
     emailError: '',
-    passwordError: ''
+    passwordError: '',
+    isFormInvalid: false
   })
 
   useEffect(() => {
+    const emailError = validation.validate('email', state.email)
+    const passwordError = validation.validate('password', state.password)
     setState(rest => ({
       ...rest,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password)
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError
     }))
   }, [state.email, state.password])
 
   async function handleSubmit (event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
-    if (isLoading || state.emailError || state.passwordError) return
+    if (isLoading || state.isFormInvalid) return
 
     setIsLoading(true)
 
@@ -61,7 +65,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" id="password" placeholder="Digite sua senha" />
-          <button data-testid="submit-btn" disabled={isLoading || !!state.emailError || !!state.passwordError} type="submit">Entrar</button>
+          <SubmitBtn>Entrar</SubmitBtn>
           <Link to="signup" data-testid="register" className={styles.link}>Criar conta</Link>
 
           <LoginError />
