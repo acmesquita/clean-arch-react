@@ -37,6 +37,8 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
 
   async function handleSubmit (event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
+    if (isLoading) return
+
     setIsLoading(true)
 
     try {
