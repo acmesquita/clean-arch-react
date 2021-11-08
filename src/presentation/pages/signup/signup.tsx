@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { AddAccount, SaveAccessToken } from '@/domain/usecases'
 import { Header, Footer, Input, LoginError } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation'
@@ -75,7 +75,7 @@ const SignUp: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Pr
           <Input type="password" name="password" id="password" placeholder="Digite sua senha" />
           <Input type="password" name="passwordConfirmation" id="passwordConfirmation" placeholder="Confirme sua senha" />
           <button data-testid="submit" disabled={hasDisabled} type="submit">Criar conta</button>
-          <span className={styles.link}>Voltar para o Login</span>
+          <Link replace to="login" data-testid="login" className={styles.link}>Voltar para o Login</Link>
 
           <LoginError />
         </form>
