@@ -1,29 +1,42 @@
 import React from 'react'
 import faker from 'faker'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import { SignUp } from '@/presentation/pages'
-import { ValidationStub , Helper, AddAccountSpy } from '@/presentation/test'
+import { ValidationStub , Helper, AddAccountSpy, SaveAccessTokenMock } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   validationStub: ValidationStub
   addAccountSpy: AddAccountSpy
+  saveAccessTokenMock: SaveAccessTokenMock
 }
 
 type SutParams = {
   validationError: string
 }
 
+const history = createMemoryHistory({ initialEntries: ['/'] })
+
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
 
   const addAccountSpy = new AddAccountSpy()
-  render(<SignUp validation={validationStub} addAccount={addAccountSpy}/>)
+
+  const saveAccessTokenMock = new SaveAccessTokenMock()
+
+  render(
+    <Router history={history}>
+      <SignUp validation={validationStub} addAccount={addAccountSpy} saveAccessToken={saveAccessTokenMock}/>
+    </Router>
+  )
 
   return {
     validationStub,
-    addAccountSpy
+    addAccountSpy,
+    saveAccessTokenMock
   }
 }
 
@@ -179,5 +192,15 @@ describe('SignUp Component', () => {
     await waitFor(() => errorWrapper)
     Helper.testChildCount('error-wrapper', 1)
     Helper.testTextContentElement('main-error', error.message)
+  })
+
+  test('Should call SaveAccessToken with correct value', async () => {
+    const { addAccountSpy, saveAccessTokenMock } = makeSut()
+
+    await simulateValidSubmit()
+
+    expect(saveAccessTokenMock.accessToken).toBe(addAccountSpy.account.accessToken)
+    expect(history.length).toBe(1)
+    expect(history.location.pathname).toBe('/')
   })
 })
