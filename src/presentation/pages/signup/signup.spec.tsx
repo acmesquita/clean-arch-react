@@ -3,6 +3,7 @@ import faker from 'faker'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import { SignUp } from '@/presentation/pages'
 import { ValidationStub , Helper, AddAccountSpy } from '@/presentation/test'
+import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   validationStub: ValidationStub
@@ -165,5 +166,20 @@ describe('SignUp Component', () => {
     fireEvent.submit(screen.getByTestId('form'))
 
     expect(addAccountSpy.callsCount).toBe(0)
+  })
+
+  test('Should show errorMessager if AddAccount fail', async () => {
+    const { addAccountSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
+    const errorWrapper = screen.getByTestId('error-wrapper')
+
+    await simulateValidSubmit()
+
+    await waitFor(() => errorWrapper)
+    Helper.testChildCount('error-wrapper', 1)
+
+    const mainError = screen.getByTestId('main-error')
+    expect(mainError.textContent).toBe(error.message)
   })
 })
