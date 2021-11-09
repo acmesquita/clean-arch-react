@@ -154,6 +154,23 @@ describe('Login', () => {
     cy.get('@request.all').should('have.length', 1)
   })
 
+  it('Should not calls submit id form is invalid', () => {
+    cy.intercept({
+      method: 'POST',
+      url: /login/
+    }, {
+      statusCode: 200,
+      body: {
+        accessToken: faker.datatype.uuid()
+      },
+      delay: 200
+    }).as('requestLogin')
+
+    cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
+
+    cy.get('@requestLogin.all').should('have.length', 0)
+  })
+
   it('Should prevent multiple submit', () => {
     const accessToken = faker.datatype.uuid()
     cy.intercept({
