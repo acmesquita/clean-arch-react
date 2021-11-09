@@ -10,8 +10,10 @@ describe('Login', () => {
   it('Should load with correct initial state', () => {
     cy.getByTestId('email').should('have.attr', 'readOnly')
     cy.getByTestId('email-label').should('have.attr', 'title', 'Campo obrigatório')
+    cy.getByTestId('email-wrap').should('have.attr', 'data-status', 'invalid')
     cy.getByTestId('password').should('have.attr', 'readOnly')
     cy.getByTestId('password-label').should('have.attr', 'title', 'Campo obrigatório')
+    cy.getByTestId('password-wrap').should('have.attr', 'data-status', 'invalid')
     cy.getByTestId('submit').should('have.attr', 'disabled')
     cy.getByTestId('error-wrapper').should('not.have.descendants')
   })
@@ -19,15 +21,21 @@ describe('Login', () => {
   it('Should present error state if form is invalid', () => {
     cy.getByTestId('email').focus().type(faker.random.word())
     cy.getByTestId('email-label').should('have.attr', 'title', "O campo 'email' está com valor inválido")
+    cy.getByTestId('email-wrap').should('have.attr', 'data-status', 'invalid')
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(3))
     cy.getByTestId('password-label').should('have.attr', 'title', 'Tamanho inválido')
+    cy.getByTestId('password-wrap').should('have.attr', 'data-status', 'invalid')
     cy.getByTestId('submit').should('have.attr', 'disabled')
     cy.getByTestId('error-wrapper').should('not.have.descendants')
   })
 
   it('Should present valid state if form is valid', () => {
     cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('email-wrap').should('have.attr', 'data-status', 'valid')
+
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+    cy.getByTestId('password-wrap').should('have.attr', 'data-status', 'valid')
+
     cy.getByTestId('submit').should('not.have.attr', 'disabled')
     cy.getByTestId('error-wrapper').should('not.have.descendants')
   })
