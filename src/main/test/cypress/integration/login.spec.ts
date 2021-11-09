@@ -7,7 +7,7 @@ describe('Login', () => {
     cy.visit('login')
   })
 
-  it('Shuld load with correct initial state', () => {
+  it('Should load with correct initial state', () => {
     cy.getByTestId('email').should('have.attr', 'readOnly')
     cy.getByTestId('email-status').should('have.attr', 'title', 'Campo obrigatório')
     cy.getByTestId('password').should('have.attr', 'readOnly')
@@ -16,7 +16,7 @@ describe('Login', () => {
     cy.getByTestId('error-wrapper').should('not.have.descendants')
   })
 
-  it('Shuld present error state if form is invalid', () => {
+  it('Should present error state if form is invalid', () => {
     cy.getByTestId('email').focus().type(faker.random.word())
     cy.getByTestId('email-status').should('have.attr', 'title', "O campo 'email' está com valor inválido")
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(3))
@@ -25,7 +25,7 @@ describe('Login', () => {
     cy.getByTestId('error-wrapper').should('not.have.descendants')
   })
 
-  it('Shuld present valid state if form is valid', () => {
+  it('Should present valid state if form is valid', () => {
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('email-status').should('have.class', '')
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
@@ -34,7 +34,7 @@ describe('Login', () => {
     cy.getByTestId('error-wrapper').should('not.have.descendants')
   })
 
-  it('Shuld present InvalidPresentError on 401', () => {
+  it('Should present InvalidPresentError on 401', () => {
     cy.intercept({
       method: 'POST',
       url: /login/
@@ -60,7 +60,7 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/login`)
   })
 
-  it('Shuld present UnexpectedError any other error', () => {
+  it('Should present UnexpectedError any other error', () => {
     cy.intercept({
       method: 'POST',
       url: /login/
@@ -86,7 +86,7 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/login`)
   })
 
-  it('Shuld present UnexpectedError if invalid data is returned', () => {
+  it('Should present UnexpectedError if invalid data is returned', () => {
     cy.intercept({
       method: 'POST',
       url: /login/
@@ -112,7 +112,7 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/login`)
   })
 
-  it('Shuld save accessTokne if valid credentiais are provider', () => {
+  it('Should save accessTokne if valid credentiais are provider', () => {
     const accessToken = faker.datatype.uuid()
     cy.intercept({
       method: 'POST',
@@ -135,5 +135,26 @@ describe('Login', () => {
       .getByTestId('spinner').should('not.exist')
     cy.url().should('eq', `${baseUrl}/`)
     cy.window().then(window => assert.deepEqual(window.localStorage.getItem('accessToken'), accessToken))
+  })
+
+  it('Should prevent multiple submit', () => {
+    const accessToken = faker.datatype.uuid()
+    cy.intercept({
+      method: 'POST',
+      url: /login/
+    }, {
+      statusCode: 200,
+      body: {
+        accessToken
+      },
+      delay: 200
+    }).as('requestLogin')
+
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+
+    cy.getByTestId('submit').dblclick()
+
+    cy.get('@requestLogin.all').should('have.length', 1)
   })
 })
