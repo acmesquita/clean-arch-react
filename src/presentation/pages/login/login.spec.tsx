@@ -87,17 +87,13 @@ describe('Login', () => {
   test('Should show valid emails state if Validation succeeds', () => {
     makeSut()
     Helper.populateField('email', faker.internet.email())
-
-    const emailStatus = screen.getByTestId('email-status')
-    expect(emailStatus.className).not.toMatch('error')
+    Helper.testStatusForField('email', '')
   })
 
   test('Should show valid password state if Validation succeeds', () => {
     makeSut()
     Helper.populateField('password', faker.internet.password())
-
-    const passwordStatus = screen.getByTestId('password-status')
-    expect(passwordStatus.className).not.toMatch('error')
+    Helper.testStatusForField('password', '')
   })
 
   test('Should enable submit button if form is valid', () => {

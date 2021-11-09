@@ -15,9 +15,14 @@ const Input: React.FC<Props> = (props: Props) => {
   const error = state[`${props.name}Error`]
 
   return (
-    <div className={styles.inputWrapper}>
+    <div
+      data-testid={`${props.name}-wrap`}
+      data-status={error ? 'invalid' : 'valid'}
+      className={styles.inputWrapper}
+    >
       <input
         {...props}
+        title={error}
         placeholder=" "
         readOnly
         onFocus={event => { event.target.readOnly = false }}
@@ -26,15 +31,12 @@ const Input: React.FC<Props> = (props: Props) => {
         ref={inputRef}
       />
       <label
+        data-testid={`${props.name}-label`}
+        title={error}
         onClick={() => inputRef.current.focus()}
       >
         {props.placeholder}
       </label>
-      <span
-        title={error}
-        data-testid={`${props.name}-status`}
-        className={error ? styles.error : ''}
-      />
     </div>
 
   )
