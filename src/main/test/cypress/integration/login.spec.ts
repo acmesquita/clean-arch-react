@@ -172,14 +172,13 @@ describe('Login', () => {
   })
 
   it('Should prevent multiple submit', () => {
-    const accessToken = faker.datatype.uuid()
     cy.intercept({
       method: 'POST',
       url: /login/
     }, {
       statusCode: 200,
       body: {
-        accessToken
+        accessToken: faker.datatype.uuid()
       },
       delay: 200
     }).as('requestLogin')
