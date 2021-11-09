@@ -137,6 +137,23 @@ describe('Login', () => {
     cy.window().then(window => assert.deepEqual(window.localStorage.getItem('accessToken'), accessToken))
   })
 
+  it('Should calls submit form when enter pressed', () => {
+    cy.intercept({
+      method: 'POST',
+      url: /login/
+    }, {
+      statusCode: 200,
+      body: {
+        accessToken: faker.datatype.uuid()
+      }
+    }).as('request')
+
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5)).type('{enter}')
+
+    cy.get('@request.all').should('have.length', 1)
+  })
+
   it('Should prevent multiple submit', () => {
     const accessToken = faker.datatype.uuid()
     cy.intercept({
