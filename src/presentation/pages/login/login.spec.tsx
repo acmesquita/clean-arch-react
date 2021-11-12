@@ -43,6 +43,7 @@ const simulateValidSubmit = async (email = faker.internet.email(), password = fa
   const form = screen.getByTestId('form')
   fireEvent.submit(form)
   await waitFor(() => form)
+  await waitFor(async () => screen.findByTestId('error-wrapper'))
 }
 
 describe('Login', () => {
@@ -121,7 +122,7 @@ describe('Login', () => {
       email,
       password
     })
-  })
+  }, 1000)
 
   test('Should calls Authentication only once', async () => {
     const { authenticationSpy } = makeSut()
