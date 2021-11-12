@@ -130,4 +130,14 @@ describe('SignUp', () => {
 
     FormHelper.testHttpCallsCount(1)
   })
+
+  it('Should prevent multiple submit', () => {
+    Http.mockOk()
+    cy.visit('signup')
+
+    simulateRequestValid()
+    cy.getByTestId('submit').click()
+
+    FormHelper.testHttpCallsCount(1)
+  })
 })
