@@ -83,4 +83,14 @@ describe('SignUp', () => {
     FormHelper.testMainError('Algo de errado aconteceu, tente novamente mais tarde.')
     FormHelper.testURl('/signup')
   })
+
+  it('Should present UnexpectedError if invalid data is returned', () => {
+    Http.mockInvalidReturn()
+    cy.visit('signup')
+
+    simulateRequestValid()
+    FormHelper.testMainError('Algo de errado aconteceu, tente novamente mais tarde.')
+
+    FormHelper.testURl('/signup')
+  })
 })
