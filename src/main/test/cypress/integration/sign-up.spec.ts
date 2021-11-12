@@ -33,8 +33,8 @@ describe('SignUp', () => {
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(3))
     FormHelper.testInputStatus('password', 'Tamanho inválido')
 
-    cy.getByTestId('passwordConfirmation').focus().type(faker.random.alphaNumeric(3))
-    FormHelper.testInputStatus('passwordConfirmation', 'Tamanho inválido')
+    cy.getByTestId('passwordConfirmation').focus().type(faker.random.alphaNumeric(5))
+    FormHelper.testInputStatus('passwordConfirmation', "O campo 'passwordConfirmation' está com valor inválido")
 
     cy.getByTestId('submit').should('have.attr', 'disabled')
     cy.getByTestId('error-wrapper').should('not.have.descendants')
