@@ -108,4 +108,13 @@ describe('SignUp', () => {
     FormHelper.testURl('/')
     FormHelper.testLocalStorageItem('accessToken', accessToken)
   })
+
+  it('Should not calls submit id form is invalid', () => {
+    Http.mockOk()
+    cy.visit('signup')
+
+    cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
+
+    FormHelper.testHttpCallsCount(0, false)
+  })
 })

@@ -31,7 +31,7 @@ export const mockUnexpetedError = (method: string, url: RegExp): void => {
     method,
     url
   }, {
-    statusCode: faker.datatype.number({ min: 402, max: 500 }),
+    statusCode: faker.datatype.number({ min: 404, max: 500 }),
     body: {
       error: faker.random.words(3)
     },
