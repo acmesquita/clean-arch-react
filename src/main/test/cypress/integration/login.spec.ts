@@ -103,7 +103,7 @@ describe('Login', () => {
   })
 
   it('Should calls submit form when enter pressed', () => {
-    Http.mockOk('request')
+    Http.mockOk()
     cy.visit('login')
 
     cy.getByTestId('email').focus().type(faker.internet.email())

@@ -117,4 +117,17 @@ describe('SignUp', () => {
 
     FormHelper.testHttpCallsCount(0, false)
   })
+
+  it('Should calls submit form when enter pressed', () => {
+    Http.mockOk()
+    cy.visit('signup')
+
+    cy.getByTestId('name').focus().type(faker.name.findName())
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    const password = faker.random.alphaNumeric(5)
+    cy.getByTestId('password').focus().type(password)
+    cy.getByTestId('passwordConfirmation').focus().type(password).type('{enter}')
+
+    FormHelper.testHttpCallsCount(1)
+  })
 })
