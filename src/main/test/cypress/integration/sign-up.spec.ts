@@ -93,4 +93,19 @@ describe('SignUp', () => {
 
     FormHelper.testURl('/signup')
   })
+
+  it('Should save accessToken if valid values are provider', () => {
+    const accessToken = faker.datatype.uuid()
+    Http.mockOk(accessToken)
+    cy.visit('signup')
+
+    simulateRequestValid()
+
+    cy.getByTestId('error-wrapper')
+      .getByTestId('spinner').should('exist')
+      .getByTestId('main-error').should('not.exist')
+      .getByTestId('spinner').should('not.exist')
+    FormHelper.testURl('/')
+    FormHelper.testLocalStorageItem('accessToken', accessToken)
+  })
 })
