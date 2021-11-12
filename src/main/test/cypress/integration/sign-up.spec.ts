@@ -73,4 +73,14 @@ describe('SignUp', () => {
     FormHelper.testMainError('Email em uso')
     FormHelper.testURl('/signup')
   })
+
+  it('Should present UnexpectedError any other error', () => {
+    Http.mockUnexpetedError()
+    cy.visit('signup')
+
+    simulateRequestValid()
+
+    FormHelper.testMainError('Algo de errado aconteceu, tente novamente mais tarde.')
+    FormHelper.testURl('/signup')
+  })
 })
