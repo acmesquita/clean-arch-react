@@ -29,11 +29,15 @@ describe('AxiosHttpClient', () => {
       expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.body)
     })
 
-    test('Should return correct response axios.post', () => {
+    test('Should return correct response axios.post', async () => {
       const { sut, mockedAxios } = makeSut()
-      const promise = sut.post(mockPostRequest())
+      const response = await sut.post(mockPostRequest())
+      const axiosResponse = await mockedAxios.post.mock.results[0].value
 
-      expect(promise).toEqual(mockedAxios.post.mock.results[0].value)
+      expect(response).toEqual({
+        body: axiosResponse.data,
+        statusCode: axiosResponse.status
+      })
     })
   })
   describe('get', () => {
@@ -43,6 +47,17 @@ describe('AxiosHttpClient', () => {
       await sut.get(request)
 
       expect(mockedAxios.get).toHaveBeenCalledWith(request.url)
+    })
+
+    test('Should return correct response axios.get', async () => {
+      const { sut, mockedAxios } = makeSut()
+      const response = await sut.get(mockGetRequest())
+      const axiosResponse = await mockedAxios.get.mock.results[0].value
+
+      expect(response).toEqual({
+        body: axiosResponse.data,
+        statusCode: axiosResponse.status
+      })
     })
   })
 })
