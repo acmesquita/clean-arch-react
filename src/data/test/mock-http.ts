@@ -31,3 +31,7 @@ export class HttpGetClientSpy<ResponseType> implements HttpGetClient {
     return this.response
   }
 }
+
+export const mockGetRequest = (): HttpGetParams => ({
+  url: faker.internet.url()
+})
