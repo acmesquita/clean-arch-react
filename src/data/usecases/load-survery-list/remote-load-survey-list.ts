@@ -1,6 +1,6 @@
 import { HttpGetClient } from '@/data/protocols/http'
 
-export class RemoveLoadSurveyList {
+export class RemoteLoadSurveyList {
   constructor (
     private readonly url: string,
     private readonly httpGetClient: HttpGetClient
