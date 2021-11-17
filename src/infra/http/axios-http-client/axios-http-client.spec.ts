@@ -1,5 +1,5 @@
 import { AxiosHttpClient } from './axios-http-client'
-import { mockAxios } from '@/infra/http/test'
+import { makeHttpResponse, mockAxios } from '@/infra/http/test'
 import { mockPostRequest, mockGetRequest } from '@/data/test'
 import axios from 'axios'
 
@@ -39,6 +39,15 @@ describe('AxiosHttpClient', () => {
         statusCode: axiosResponse.status
       })
     })
+
+    test('Should return correct errro on axios.post', () => {
+      const { sut, mockedAxios } = makeSut()
+      mockedAxios.post.mockRejectedValueOnce({
+        response: makeHttpResponse
+      })
+      const promise = sut.post(mockPostRequest())
+      expect(promise).toEqual(mockedAxios.post.mock.results[0].value)
+    })
   })
   describe('get', () => {
     test('Should call axios.get with out params', async () => {
@@ -58,6 +67,15 @@ describe('AxiosHttpClient', () => {
         body: axiosResponse.data,
         statusCode: axiosResponse.status
       })
+    })
+
+    test('Should return correct errro on axios.get', () => {
+      const { sut, mockedAxios } = makeSut()
+      mockedAxios.get.mockRejectedValueOnce({
+        response: makeHttpResponse
+      })
+      const promise = sut.get(mockGetRequest())
+      expect(promise).toEqual(mockedAxios.get.mock.results[0].value)
     })
   })
 })
