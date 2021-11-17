@@ -20,10 +20,14 @@ export const mockPostRequest = (): HttpPostClientParams => ({
   body: faker.random.word
 })
 
-export class HttpGetClientSpy implements HttpGetClient {
+export class HttpGetClientSpy<ResponseType> implements HttpGetClient {
   url: string
-  async get (params: HttpGetParams): Promise<void> {
+  response: HttpResponse<ResponseType> = {
+    statusCode: HttpStatusCode.ok
+  }
+
+  async get (params: HttpGetParams): Promise<HttpResponse<ResponseType>> {
     this.url = params.url
-    return null
+    return this.response
   }
 }

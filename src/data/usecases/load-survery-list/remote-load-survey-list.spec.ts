@@ -1,14 +1,17 @@
 import faker from 'faker'
 import { HttpGetClientSpy } from '@/data/test'
 import { RemoteLoadSurveyList } from './remote-load-survey-list'
+import { UnexpectedError } from '@/domain/errors'
+import { HttpStatusCode } from '@/data/protocols/http'
+import { SurveryModel } from '@/domain/models'
 
 type SutTypes = {
   sut: RemoteLoadSurveyList
-  httpGetClientSpy: HttpGetClientSpy
+  httpGetClientSpy: HttpGetClientSpy<SurveryModel[]>
 }
 
 const makeSut = (url = faker.internet.url()): SutTypes => {
-  const httpGetClientSpy = new HttpGetClientSpy()
+  const httpGetClientSpy = new HttpGetClientSpy<SurveryModel[]>()
   const sut = new RemoteLoadSurveyList(url, httpGetClientSpy)
 
   return {
@@ -24,5 +27,15 @@ describe('RemoteLoadSurveyList', () => {
     await sut.loadAll()
 
     expect(httpGetClientSpy.url).toBe(url)
+  })
+
+  test('Should throws UnexpectedError if HttpGetClient returns 403', async () => {
+    const { sut, httpGetClientSpy } = makeSut()
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.forbidden
+    }
+    const promise = sut.loadAll()
+
+    await expect(promise).rejects.toThrow(new UnexpectedError())
   })
 })
