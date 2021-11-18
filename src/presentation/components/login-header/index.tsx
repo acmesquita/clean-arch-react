@@ -3,7 +3,7 @@ import Logo from '../logo'
 import styles from './styles.scss'
 
 const LoginHeader: React.FC = () => (
-  <header className={styles.header}>
+  <header className={styles.headerWrapper}>
     <Logo />
     <h1>4Dev - Enquetes para Programadores</h1>
   </header>

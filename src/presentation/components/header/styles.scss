@@ -43,3 +43,14 @@
     }
   }
 }
+
+
+@media only screen and (max-width: 615px) {
+  .headerWrapper {
+    border-top-width: 20px;
+
+    .headerContent {
+      padding: 12px 40px;
+    }
+  }
+}
