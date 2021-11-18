@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
-import { Authentication, SaveAccessToken } from '@/domain/usecases'
-import { LoginHeader, Footer, Input, LoginError, SubmitBtn } from '@/presentation/components'
+import { Authentication, UpdateCurrentAccount } from '@/domain/usecases'
+import { Header, Footer, Input, LoginError, SubmitBtn } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation'
 import { FormLoginContext } from '@/presentation/context/form/form-context'
 import styles from './styles.scss'
@@ -10,10 +10,10 @@ import styles from './styles.scss'
 type Props = {
   validation: Validation
   authentication: Authentication
-  saveAccessToken: SaveAccessToken
+  updateCurrentAccount: UpdateCurrentAccount
 }
 
-const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }: Props) => {
+const Login: React.FC<Props> = ({ validation, authentication, updateCurrentAccount }: Props) => {
   const history = useHistory()
   const [mainError, setMainError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -51,7 +51,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
         password: state.password
       })
 
-      await saveAccessToken.save(account.accessToken)
+      await updateCurrentAccount.save({ accessToken: account.accessToken, name: account.name })
       history.replace('/')
     } catch (error) {
       setIsLoading(false)
@@ -61,7 +61,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
 
   return (
     <div className={styles.loginWrapper}>
-      <LoginHeader />
+      <Header />
       <FormLoginContext.Provider value={{ state, setState, mainError, isLoading }}>
         <form data-testid="form" className={styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>

@@ -1,6 +1,7 @@
 import faker from 'faker'
 import * as FormHelper from '../suport/form-helper'
 import * as Http from '../suport/login-mock'
+import { mockAccountModel } from '../suport/account-mock'
 
 const simulateRequestValid = (): void => {
   cy.getByTestId('email').focus().type(faker.internet.email())
@@ -68,19 +69,9 @@ describe('Login', () => {
     FormHelper.testURl('/login')
   })
 
-  it('Should present UnexpectedError if invalid data is returned', () => {
-    Http.mockInvalidReturn()
-    cy.visit('login')
-
-    simulateRequestValid()
-    FormHelper.testMainError('Algo de errado aconteceu, tente novamente mais tarde.')
-
-    FormHelper.testURl('/login')
-  })
-
-  it('Should save accessToken if valid credentiais are provider', () => {
-    const accessToken = faker.datatype.uuid()
-    Http.mockOk(accessToken)
+  it('Should save account if valid credentiais are provider', () => {
+    const account = mockAccountModel()
+    Http.mockOk(account.accessToken, account.name)
     cy.visit('login')
 
     simulateRequestValid()
@@ -90,7 +81,7 @@ describe('Login', () => {
       .getByTestId('main-error').should('not.exist')
       .getByTestId('spinner').should('not.exist')
     FormHelper.testURl('/')
-    FormHelper.testLocalStorageItem('accessToken', accessToken)
+    FormHelper.testLocalStorageItem('account', JSON.stringify(account))
   })
 
   it('Should not calls submit id form is invalid', () => {

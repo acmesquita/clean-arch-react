@@ -4,14 +4,14 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock, Helper } from '@/presentation/test'
+import { ValidationStub, AuthenticationSpy, UpdateCurrentAccountMock, Helper } from '@/presentation/test'
 import { Login } from '@/presentation/pages'
 import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   validationStub: ValidationStub
   authenticationSpy: AuthenticationSpy
-  saveAccessTokenMock: SaveAccessTokenMock
+  updateCurrentAccountMock: UpdateCurrentAccountMock
 }
 
 const history = createMemoryHistory({ initialEntries: ['/login'] })
@@ -22,18 +22,18 @@ const makeSut = (): SutTypes => {
 
   const authenticationSpy = new AuthenticationSpy()
 
-  const saveAccessTokenMock = new SaveAccessTokenMock()
+  const updateCurrentAccountMock = new UpdateCurrentAccountMock()
 
   render(
     <Router history={history}>
-      <Login validation={validationStub} authentication={authenticationSpy} saveAccessToken={saveAccessTokenMock}/>
+      <Login validation={validationStub} authentication={authenticationSpy} updateCurrentAccount={updateCurrentAccountMock}/>
     </Router>
   )
 
   return {
     validationStub,
     authenticationSpy,
-    saveAccessTokenMock
+    updateCurrentAccountMock
   }
 }
 
@@ -52,13 +52,13 @@ describe('Login', () => {
   test('Should start with initial state', () => {
     const validationStub = new ValidationStub()
     const authenticationSpy = new AuthenticationSpy()
-    const saveAccessTokenMock = new SaveAccessTokenMock()
+    const updateCurrentAccountMock = new UpdateCurrentAccountMock()
     const errorMessage = faker.random.words(5)
     validationStub.errorMessage = errorMessage
 
     render(
       <Router history={history}>
-        <Login validation={validationStub} authentication={authenticationSpy} saveAccessToken={saveAccessTokenMock} />
+        <Login validation={validationStub} authentication={authenticationSpy} updateCurrentAccount={updateCurrentAccountMock} />
       </Router>
     )
 
@@ -136,13 +136,13 @@ describe('Login', () => {
   test('Should not call Authentication if form is invalid', () => {
     const validationStub = new ValidationStub()
     const authenticationSpy = new AuthenticationSpy()
-    const saveAccessTokenMock = new SaveAccessTokenMock()
+    const updateCurrentAccountMock = new UpdateCurrentAccountMock()
     const errorMessage = faker.random.words(5)
     validationStub.errorMessage = errorMessage
 
     render(
       <Router history={history}>
-        <Login validation={validationStub} authentication={authenticationSpy} saveAccessToken={saveAccessTokenMock} />
+        <Login validation={validationStub} authentication={authenticationSpy} updateCurrentAccount={updateCurrentAccountMock} />
       </Router>
     )
 
@@ -164,10 +164,10 @@ describe('Login', () => {
     Helper.testTextContentElement('main-error', error.message)
   })
 
-  test('Should show errorMessager if SaveAccessToken fail', async () => {
-    const { saveAccessTokenMock } = makeSut()
+  test('Should show errorMessager if UpdateCurrentAccount fail', async () => {
+    const { updateCurrentAccountMock } = makeSut()
     const error = new InvalidCredentialsError()
-    jest.spyOn(saveAccessTokenMock, 'save').mockRejectedValueOnce(error)
+    jest.spyOn(updateCurrentAccountMock, 'save').mockRejectedValueOnce(error)
     const errorWrapper = screen.getByTestId('error-wrapper')
 
     await simulateValidSubmit()
@@ -177,14 +177,14 @@ describe('Login', () => {
     Helper.testTextContentElement('main-error', error.message)
   })
 
-  test('Should call SaveAccessToken with correct value', async () => {
-    const { authenticationSpy, saveAccessTokenMock } = makeSut()
+  test('Should call UpdateCurrentAccount with correct values', async () => {
+    const { authenticationSpy, updateCurrentAccountMock } = makeSut()
 
     await simulateValidSubmit()
 
     await waitFor(() => { screen.getByTestId('form') })
 
-    expect(saveAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken)
+    expect(updateCurrentAccountMock.account).toEqual(authenticationSpy.account)
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
   })
