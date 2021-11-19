@@ -2,7 +2,7 @@ import React from 'react'
 import faker from 'faker'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { SignUp } from '@/presentation/pages'
 import { ValidationStub , Helper, AddAccountSpy } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
@@ -55,8 +55,6 @@ const simulateValidSubmit = async (name = faker.name.findName(), email = faker.i
 }
 
 describe('SignUp Component', () => {
-  afterEach(cleanup)
-
   test('Should start with initial state', () => {
     const validationError = 'Campo obrigatório'
     makeSut({ validationError })

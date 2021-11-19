@@ -2,7 +2,7 @@ import React from 'react'
 import faker from 'faker'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ValidationStub, AuthenticationSpy, Helper } from '@/presentation/test'
 import { Login } from '@/presentation/pages'
@@ -50,8 +50,6 @@ const simulateValidSubmit = async (email = faker.internet.email(), password = fa
 }
 
 describe('Login', () => {
-  afterEach(cleanup)
-
   test('Should start with initial state', () => {
     const errorMessage = faker.random.words(5)
     makeSut(errorMessage)
