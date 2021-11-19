@@ -53,11 +53,10 @@ describe('Login', () => {
   test('Should start with initial state', () => {
     const errorMessage = faker.random.words(5)
     makeSut(errorMessage)
-
-    Helper.testChildCount('error-wrapper', 0)
+    expect(screen.getByTestId('error-wrapper').children).toHaveLength(0)
     Helper.testStatusForField('email', errorMessage)
     Helper.testStatusForField('password', errorMessage)
-    Helper.testButtonIsDisabled('submit', true)
+    expect(screen.getByTestId('submit')).toBeDisabled()
   })
 
   test('Should show email error if validation fails', () => {
@@ -93,14 +92,13 @@ describe('Login', () => {
     makeSut()
     Helper.populateField('email', faker.internet.email())
     Helper.populateField('password', faker.internet.password())
-
-    Helper.testButtonIsDisabled('submit', false)
+    expect(screen.getByTestId('submit')).toBeEnabled()
   })
 
   test('Should show spinner on submit', async () => {
     makeSut()
     await simulateValidSubmit()
-    Helper.testIfElementExist('spinner')
+    expect(screen.queryByTestId('spinner')).toBeInTheDocument()
   })
 
   test('Should calls Authentication with correct values', async () => {
@@ -144,8 +142,8 @@ describe('Login', () => {
     await simulateValidSubmit()
 
     await waitFor(() => errorWrapper)
-    Helper.testChildCount('error-wrapper', 1)
-    Helper.testTextContentElement('main-error', error.message)
+    expect(screen.getByTestId('error-wrapper').children).toHaveLength(1)
+    expect(screen.getByTestId('main-error')).toHaveTextContent(error.message)
   })
 
   test('Should call UpdateCurrentAccount with correct values', async () => {

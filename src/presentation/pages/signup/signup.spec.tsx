@@ -58,9 +58,8 @@ describe('SignUp Component', () => {
   test('Should start with initial state', () => {
     const validationError = 'Campo obrigatório'
     makeSut({ validationError })
-
-    Helper.testChildCount('error-wrapper', 0)
-    Helper.testButtonIsDisabled('submit', true)
+    expect(screen.getByTestId('error-wrapper').children).toHaveLength(0)
+    expect(screen.getByTestId('submit')).toBeDisabled()
     Helper.testStatusForField('name', validationError)
     Helper.testStatusForField('email', validationError)
     Helper.testStatusForField('password', validationError)
@@ -130,14 +129,13 @@ describe('SignUp Component', () => {
     Helper.populateField('email', faker.internet.email())
     Helper.populateField('password', password)
     Helper.populateField('passwordConfirmation', password)
-
-    Helper.testButtonIsDisabled('submit', false)
+    expect(screen.getByTestId('submit')).toBeEnabled()
   })
 
   test('Should show spinner on submit', async () => {
     makeSut()
     await simulateValidSubmit()
-    Helper.testIfElementExist('spinner')
+    expect(screen.queryByTestId('spinner')).toBeInTheDocument()
   })
 
   test('Should calls AddAccount with correct values', async () => {
@@ -184,8 +182,8 @@ describe('SignUp Component', () => {
     await simulateValidSubmit()
 
     await waitFor(() => errorWrapper)
-    Helper.testChildCount('error-wrapper', 1)
-    Helper.testTextContentElement('main-error', error.message)
+    expect(screen.getByTestId('error-wrapper').children).toHaveLength(1)
+    expect(screen.getByTestId('main-error')).toHaveTextContent(error.message)
   })
 
   test('Should call UpdateCurrentAccount with correct value', async () => {
