@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './styles.scss'
 import { Footer, Header } from '@/presentation/components'
-import { SurveryItem, SurveryItemEmpty } from './components'
+import { SurveryItem, SurveryItemEmpty } from '@/presentation/pages/survery-list/components'
 
 const SurveryList: React.FC = () => {
   return (
@@ -9,8 +9,8 @@ const SurveryList: React.FC = () => {
       <Header />
       <main className={styles.contentWrapper}>
         <h2>Enquetes</h2>
-        <ul>
-
+        <ul data-testid="survery-list">
+          <SurveryItemEmpty />
         </ul>
       </main>
       <Footer />
