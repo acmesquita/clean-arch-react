@@ -4,6 +4,7 @@ import { SurveryList } from '@/presentation/pages'
 import { LoadSurveryList } from '@/domain/usecases'
 import { SurveryModel } from '@/domain/models'
 import { mockSurveryListModel } from '@/domain/test'
+import { UnexpectedError } from '@/domain/errors'
 
 class LoadSurveryListSpy implements LoadSurveryList {
   callsCount = 0
@@ -19,8 +20,7 @@ type SutType = {
   loadSurveryListSpy: LoadSurveryListSpy
 }
 
-const makeSut = (): SutType => {
-  const loadSurveryListSpy = new LoadSurveryListSpy()
+const makeSut = (loadSurveryListSpy = new LoadSurveryListSpy()): SutType => {
   render(<SurveryList loadSurveryList={loadSurveryListSpy} />)
 
   return {
@@ -33,6 +33,7 @@ describe('SurveryList Component', () => {
     makeSut()
     const surveryList = screen.getByTestId('survery-list')
     expect(surveryList.querySelectorAll('li:empty')).toHaveLength(4)
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument()
     await waitFor(() => surveryList)
   })
 
@@ -47,5 +48,17 @@ describe('SurveryList Component', () => {
     const surveryList = screen.getByTestId('survery-list')
     await waitFor(() => surveryList)
     expect(surveryList.querySelectorAll('li.surveryItemWrapper')).toHaveLength(2)
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument()
+  })
+
+  test('Should render MessageError on fail', async () => {
+    const loadSurveryListSpy = new LoadSurveryListSpy()
+    const error = new UnexpectedError()
+    jest.spyOn(loadSurveryListSpy, 'loadAll').mockRejectedValueOnce(error)
+    makeSut(loadSurveryListSpy)
+    await waitFor(() => screen.getByRole('heading'))
+
+    expect(screen.queryByTestId('survery-list')).not.toBeInTheDocument()
+    expect(screen.getByTestId('error')).toHaveTextContent(error.message)
   })
 })
