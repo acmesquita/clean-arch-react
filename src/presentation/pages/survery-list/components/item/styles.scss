@@ -1,6 +1,6 @@
 @import '../../../../styles/colors.scss';
 
-.surveryItemWrapper {
+.itemWrapper {
   height: 250px;
   background-color: $white;
   display: flex;
@@ -83,7 +83,7 @@
 }
 
 @media only screen and (max-width: 615px) {
-  .surveryItemWrapper {
+  .itemWrapper {
     flex-basis: 100%;
     .surveryContent {
       padding: 40px 6px;

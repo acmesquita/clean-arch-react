@@ -8,11 +8,11 @@ type Props = {
   survery: SurveryModel
 }
 
-const SurveryItem: React.FC<Props> = ({ survery }: Props) => {
+const Item: React.FC<Props> = ({ survery }: Props) => {
   const iconName = survery.didAnswer ? IconName.thumbUp : IconName.thumbDown
 
   return (
-    <li className={styles.surveryItemWrapper}>
+    <li className={styles.itemWrapper}>
       <div className={styles.surveryContent}>
         <Icon iconName={iconName} className={styles.iconWrapper}/>
         <time>
@@ -33,4 +33,4 @@ const SurveryItem: React.FC<Props> = ({ survery }: Props) => {
   )
 }
 
-export default SurveryItem
+export default Item

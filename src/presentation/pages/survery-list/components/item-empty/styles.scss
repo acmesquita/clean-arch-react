@@ -1,6 +1,6 @@
 @import '../../../../styles/colors.scss';
 
-.surveryItemEmpty {
+.itemEmpty {
   height: 250px;
   background-color: $white;
   display: flex;
@@ -45,7 +45,7 @@
 }
 
 @media only screen and (max-width: 615px) {
-  .surveryItemEmpty {
+  .itemEmpty {
     flex-basis: 100%;
   }
 }

@@ -1,15 +1,14 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { SurveryItem } from '@/presentation/pages/survery-list/components'
+import { Item } from '@/presentation/pages/survery-list/components'
 import { mockSurveryModel } from '@/domain/test'
 import { IconName } from '@/presentation/components'
-import { SurveryModel } from '@/domain/models'
 
 const makeSut = (survery = mockSurveryModel()): void => {
-  render(<SurveryItem survery={survery}/>)
+  render(<Item survery={survery}/>)
 }
 
-describe('SurveryItem Component', () => {
+describe('Item Component', () => {
   test('Should render with correct values', () => {
     const survery = Object.assign(mockSurveryModel(), {
       didAnswer: true,

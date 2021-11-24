@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.scss'
 import { Footer, Header } from '@/presentation/components'
-import { SurveryItem, SurveryItemEmpty } from '@/presentation/pages/survery-list/components'
+import { List, SurveryContext, SurveryError } from '@/presentation/pages/survery-list/components'
 import { LoadSurveryList } from '@/domain/usecases'
 import { SurveryModel } from '@/domain/models'
 
@@ -28,24 +28,9 @@ const SurveryList: React.FC<Props> = ({ loadSurveryList }: Props) => {
       <Header />
       <main className={styles.contentWrapper}>
         <h2>Enquetes</h2>
-        { error
-          ? (
-          <div>
-            <span data-testid="error" className={styles.error}>{error}</span>
-            <button>Recarregar</button>
-          </div>
-            )
-          : (
-          <ul data-testid="survery-list">
-            { surveries.length > 0
-              ? (
-                  surveries.map(survery => (<SurveryItem key={survery.id} survery={survery} />))
-                )
-              : (
-              <SurveryItemEmpty />
-                )}
-          </ul>
-            )}
+        <SurveryContext.Provider value={{ surveries, error }}>
+          { error ? <SurveryError /> : <List /> }
+        </SurveryContext.Provider>
       </main>
       <Footer />
     </div>

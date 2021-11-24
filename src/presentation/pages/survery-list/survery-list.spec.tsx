@@ -47,7 +47,7 @@ describe('SurveryList Component', () => {
     makeSut()
     const surveryList = screen.getByTestId('survery-list')
     await waitFor(() => surveryList)
-    expect(surveryList.querySelectorAll('li.surveryItemWrapper')).toHaveLength(2)
+    expect(surveryList.querySelectorAll('li.itemWrapper')).toHaveLength(2)
     expect(screen.queryByTestId('error')).not.toBeInTheDocument()
   })
 
