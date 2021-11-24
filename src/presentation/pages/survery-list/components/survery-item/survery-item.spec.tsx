@@ -23,4 +23,17 @@ describe('SurveryItem Component', () => {
     expect(screen.getByTestId('month')).toHaveTextContent('jan')
     expect(screen.getByTestId('year')).toHaveTextContent('2020')
   })
+  test('Should render with correct values', () => {
+    const survery = Object.assign(mockSurveryModel(), {
+      didAnswer: false,
+      date: new Date('2019-05-03T00:00:00')
+    })
+    makeSut(survery)
+
+    expect(screen.getByTestId('icon')).toHaveProperty('src', IconName.thumbDown)
+    expect(screen.getByTestId('question')).toHaveTextContent(survery.question)
+    expect(screen.getByTestId('day')).toHaveTextContent('03')
+    expect(screen.getByTestId('month')).toHaveTextContent('mai')
+    expect(screen.getByTestId('year')).toHaveTextContent('2019')
+  })
 })
