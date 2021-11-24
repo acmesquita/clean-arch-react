@@ -11,11 +11,15 @@ type Props = {
 
 const SurveryList: React.FC<Props> = ({ loadSurveryList }: Props) => {
   const [surveries, setSurveries] = useState<SurveryModel[]>([])
+  const [error, setError] = useState()
 
   useEffect(() => {
     loadSurveryList.loadAll()
       .then(result => {
         setSurveries(result)
+      })
+      .catch(error => {
+        setError(error.message)
       })
   }, [])
 
@@ -24,15 +28,24 @@ const SurveryList: React.FC<Props> = ({ loadSurveryList }: Props) => {
       <Header />
       <main className={styles.contentWrapper}>
         <h2>Enquetes</h2>
-        <ul data-testid="survery-list">
-          { surveries.length > 0
-            ? (
-                surveries.map(survery => (<SurveryItem key={survery.id} survery={survery} />))
-              )
-            : (
-            <SurveryItemEmpty />
-              )}
-        </ul>
+        { error
+          ? (
+          <div>
+            <span data-testid="error" className={styles.error}>{error}</span>
+            <button>Recarregar</button>
+          </div>
+            )
+          : (
+          <ul data-testid="survery-list">
+            { surveries.length > 0
+              ? (
+                  surveries.map(survery => (<SurveryItem key={survery.id} survery={survery} />))
+                )
+              : (
+              <SurveryItemEmpty />
+                )}
+          </ul>
+            )}
       </main>
       <Footer />
     </div>
