@@ -1,7 +1,7 @@
-import { LoadSurveryList } from '@/domain/usecases'
+import { LoadSurveyList } from '@/domain/usecases'
 import { RemoteLoadSurveyList } from '@/data/usecases'
 import { makeAxiosHttpClient, makeApiUrlFactory } from '@/main/factories/http'
 
-export const makeRemoveLoadSurveryList = (): LoadSurveryList => {
+export const makeRemoveLoadSurveyList = (): LoadSurveyList => {
   return new RemoteLoadSurveyList(makeApiUrlFactory('/surveys'), makeAxiosHttpClient())
 }

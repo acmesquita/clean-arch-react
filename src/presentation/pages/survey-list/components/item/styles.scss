@@ -11,7 +11,7 @@
   margin-bottom: 24px;
   box-shadow: 0px 1px 3px -1px $black;
 
-  .surveryContent {
+  .surveyContent {
     position: relative;
     border-radius: 8px 8px 0 0;
     display: flex;
@@ -85,7 +85,7 @@
 @media only screen and (max-width: 615px) {
   .itemWrapper {
     flex-basis: 100%;
-    .surveryContent {
+    .surveyContent {
       padding: 40px 6px;
     }
   }

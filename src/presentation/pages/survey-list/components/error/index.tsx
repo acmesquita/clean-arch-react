@@ -1,13 +1,13 @@
 import React, { useContext } from 'react'
 import styles from './styles.scss'
-import { SurveryContext } from '@/presentation/pages/survery-list/components'
+import { SurveyContext } from '@/presentation/pages/survey-list/components'
 
 const Error: React.FC = () => {
-  const { error, setReload, setError, setSurveries } = useContext(SurveryContext)
+  const { error, setReload, setError, setSurveys } = useContext(SurveyContext)
 
   function reload (): void {
     setError('')
-    setSurveries([])
+    setSurveys([])
     setReload((state: boolean): boolean => !state)
   }
 

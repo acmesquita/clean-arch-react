@@ -1,2 +1,2 @@
 export * from './account-model'
-export * from './survery-model'
+export * from './survey-model'

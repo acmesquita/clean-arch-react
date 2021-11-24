@@ -2,31 +2,31 @@ import React from 'react'
 import styles from './styles.scss'
 import { Icon } from '@/presentation/components'
 import { IconName } from '@/presentation/components/icon'
-import { SurveryModel } from '@/domain/models'
+import { SurveyModel } from '@/domain/models'
 
 type Props = {
-  survery: SurveryModel
+  survey: SurveyModel
 }
 
-const Item: React.FC<Props> = ({ survery }: Props) => {
-  const iconName = survery.didAnswer ? IconName.thumbUp : IconName.thumbDown
+const Item: React.FC<Props> = ({ survey }: Props) => {
+  const iconName = survey.didAnswer ? IconName.thumbUp : IconName.thumbDown
 
   return (
     <li className={styles.itemWrapper}>
-      <div className={styles.surveryContent}>
+      <div className={styles.surveyContent}>
         <Icon iconName={iconName} className={styles.iconWrapper}/>
         <time>
           <span data-testid="day" className={styles.day}>
-            {String(survery.date.getDate()).padStart(2, '0')}
+            {String(survey.date.getDate()).padStart(2, '0')}
           </span>
           <span data-testid="month" className={styles.month}>
-            {survery.date.toLocaleString('pt-BR', { month: 'short' }).replace('.', '')}
+            {survey.date.toLocaleString('pt-BR', { month: 'short' }).replace('.', '')}
           </span>
           <span data-testid="year" className={styles.year}>
-            {survery.date.getFullYear()}
+            {survey.date.getFullYear()}
           </span>
         </time>
-        <p data-testid="question">{survery.question}</p>
+        <p data-testid="question">{survey.question}</p>
       </div>
       <footer>Ver Resultado</footer>
     </li>
