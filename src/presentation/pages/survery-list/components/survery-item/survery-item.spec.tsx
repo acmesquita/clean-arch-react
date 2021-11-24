@@ -3,13 +3,19 @@ import { render, screen } from '@testing-library/react'
 import { SurveryItem } from '@/presentation/pages/survery-list/components'
 import { mockSurveryModel } from '@/domain/test'
 import { IconName } from '@/presentation/components'
+import { SurveryModel } from '@/domain/models'
+
+const makeSut = (survery = mockSurveryModel()): void => {
+  render(<SurveryItem survery={survery}/>)
+}
 
 describe('SurveryItem Component', () => {
   test('Should render with correct values', () => {
-    const survery = mockSurveryModel()
-    survery.didAnswer = true
-    survery.date = new Date('2020-01-10T00:00:00')
-    render(<SurveryItem survery={survery}/>)
+    const survery = Object.assign(mockSurveryModel(), {
+      didAnswer: true,
+      date: new Date('2020-01-10T00:00:00')
+    })
+    makeSut(survery)
 
     expect(screen.getByTestId('icon')).toHaveProperty('src', IconName.thumbUp)
     expect(screen.getByTestId('question')).toHaveTextContent(survery.question)
