@@ -9,13 +9,15 @@ type Props = {
 }
 
 const SurveryItem: React.FC<Props> = ({ survery }: Props) => {
+  const iconName = survery.didAnswer ? IconName.thumbUp : IconName.thumbDown
+
   return (
     <li className={styles.surveryItemWrapper}>
       <div className={styles.surveryContent}>
-        <Icon iconName={IconName.thumbUp} className={styles.iconWrapper}/>
+        <Icon iconName={iconName} className={styles.iconWrapper}/>
         <time>
           <span data-testid="day" className={styles.day}>
-            {survery.date.getDate()}
+            {String(survery.date.getDate()).padStart(2, '0')}
           </span>
           <span data-testid="month" className={styles.month}>
             {survery.date.toLocaleString('pt-BR', { month: 'short' }).replace('.', '')}
