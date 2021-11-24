@@ -2,18 +2,29 @@ import React from 'react'
 import styles from './styles.scss'
 import { Icon } from '@/presentation/components'
 import { IconName } from '@/presentation/components/icon'
+import { SurveryModel } from '@/domain/models'
 
-const SurveryItem: React.FC = () => {
+type Props = {
+  survery: SurveryModel
+}
+
+const SurveryItem: React.FC<Props> = ({ survery }: Props) => {
   return (
     <li className={styles.surveryItemWrapper}>
       <div className={styles.surveryContent}>
         <Icon iconName={IconName.thumbUp} className={styles.iconWrapper}/>
         <time>
-          <span className={styles.day}>18</span>
-          <span className={styles.month}>11</span>
-          <span className={styles.year}>2020</span>
+          <span data-testid="day" className={styles.day}>
+            {survery.date.getDate()}
+          </span>
+          <span data-testid="month" className={styles.month}>
+            {survery.date.toLocaleString('pt-BR', { month: 'short' }).replace('.', '')}
+          </span>
+          <span data-testid="year" className={styles.year}>
+            {survery.date.getFullYear()}
+          </span>
         </time>
-        <p>Qual é o seu framework web favorito?</p>
+        <p data-testid="question">{survery.question}</p>
       </div>
       <footer>Ver Resultado</footer>
     </li>
