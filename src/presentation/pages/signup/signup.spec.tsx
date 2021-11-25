@@ -4,16 +4,17 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { SignUp } from '@/presentation/pages'
-import { ValidationStub , Helper, AddAccountSpy } from '@/presentation/test'
+import { ValidationStub , Helper } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 import userEvent from '@testing-library/user-event'
-import { AccountModel } from '@/domain/models'
 import { ApiContext } from '@/presentation/context'
+import { AddAccount } from '@/domain/usecases'
+import { AddAccountSpy } from '@/domain/test'
 
 type SutTypes = {
   validationStub: ValidationStub
   addAccountSpy: AddAccountSpy
-  setCurrentAccountMock: (account: AccountModel) => void
+  setCurrentAccountMock: (account: AddAccount.Model) => void
 }
 
 type SutParams = {

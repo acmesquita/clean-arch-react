@@ -2,7 +2,7 @@ import faker from 'faker'
 import { GetStorageSpy, HttpGetClientSpy, mockGetRequest } from '@/data/test'
 import { AuthorizeHttpGetClientDecorator } from '@/main/decorators'
 import { HttpGetParams } from '@/data/protocols/http'
-import { mockAccountModel } from '@/domain/test'
+import { mockAuthenticationModel } from '@/domain/test'
 
 type SutTypes = {
   sut: AuthorizeHttpGetClientDecorator
@@ -45,7 +45,7 @@ describe('AuthorizeHttpGetClientDecorator', () => {
 
   test('Should add headers to HttpGetClient', async () => {
     const { sut, httpGetClientSpy, getStorageSpy } = makeSut()
-    getStorageSpy.value = mockAccountModel()
+    getStorageSpy.value = mockAuthenticationModel()
     const httpRequest: HttpGetParams = {
       url: faker.internet.url()
     }
@@ -58,7 +58,7 @@ describe('AuthorizeHttpGetClientDecorator', () => {
 
   test('Should merge headers to HttpGetClient if exist other headers', async () => {
     const { sut, httpGetClientSpy, getStorageSpy } = makeSut()
-    getStorageSpy.value = mockAccountModel()
+    getStorageSpy.value = mockAuthenticationModel()
     const field = faker.random.words()
     const httpRequest: HttpGetParams = {
       url: faker.internet.url(),
