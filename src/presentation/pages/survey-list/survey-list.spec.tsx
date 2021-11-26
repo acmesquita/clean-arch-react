@@ -1,6 +1,9 @@
 import React from 'react'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { SurveyList } from '@/presentation/pages'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
+import { ApiContext } from '@/presentation/context'
 import { LoadSurveyListSpy } from '@/domain/test'
 import { UnexpectedError } from '@/domain/errors'
 
@@ -9,7 +12,13 @@ type SutType = {
 }
 
 const makeSut = (loadSurveyListSpy = new LoadSurveyListSpy()): SutType => {
-  render(<SurveyList loadSurveyList={loadSurveyListSpy} />)
+  render(
+     <Router history={createMemoryHistory()}>
+      <ApiContext.Provider value={{ setCurrentAccount: jest.fn() }}>
+        <SurveyList loadSurveyList={loadSurveyListSpy} />
+      </ApiContext.Provider>
+     </Router>
+  )
 
   return {
     loadSurveyListSpy
