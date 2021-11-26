@@ -1,5 +1,6 @@
 import faker from 'faker'
-import * as FormHelper from '../suport/form-helper'
+import * as FormHelpers from '../suport/form-helpers'
+import * as Helpers from '../suport/helpers'
 import * as Http from '../suport/sign-up-mock'
 import { mockAccountModel } from '../suport/account-mock'
 
@@ -17,16 +18,16 @@ describe('SignUp', () => {
     cy.visit('signup')
 
     cy.getByTestId('name').should('have.attr', 'readOnly')
-    FormHelper.testInputStatus('name', 'Campo obrigatório')
+    FormHelpers.testInputStatus('name', 'Campo obrigatório')
 
     cy.getByTestId('email').should('have.attr', 'readOnly')
-    FormHelper.testInputStatus('email', 'Campo obrigatório')
+    FormHelpers.testInputStatus('email', 'Campo obrigatório')
 
     cy.getByTestId('password').should('have.attr', 'readOnly')
-    FormHelper.testInputStatus('password', 'Campo obrigatório')
+    FormHelpers.testInputStatus('password', 'Campo obrigatório')
 
     cy.getByTestId('passwordConfirmation').should('have.attr', 'readOnly')
-    FormHelper.testInputStatus('passwordConfirmation', 'Campo obrigatório')
+    FormHelpers.testInputStatus('passwordConfirmation', 'Campo obrigatório')
 
     cy.getByTestId('submit').should('have.attr', 'disabled')
     cy.getByTestId('error-wrapper').should('not.have.descendants')
@@ -36,16 +37,16 @@ describe('SignUp', () => {
     cy.visit('signup')
 
     cy.getByTestId('name').focus().type(faker.datatype.string(2))
-    FormHelper.testInputStatus('name', 'Tamanho inválido')
+    FormHelpers.testInputStatus('name', 'Tamanho inválido')
 
     cy.getByTestId('email').focus().type(faker.random.word())
-    FormHelper.testInputStatus('email', "O campo 'email' está com valor inválido")
+    FormHelpers.testInputStatus('email', "O campo 'email' está com valor inválido")
 
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(3))
-    FormHelper.testInputStatus('password', 'Tamanho inválido')
+    FormHelpers.testInputStatus('password', 'Tamanho inválido')
 
     cy.getByTestId('passwordConfirmation').focus().type(faker.random.alphaNumeric(5))
-    FormHelper.testInputStatus('passwordConfirmation', "O campo 'passwordConfirmation' está com valor inválido")
+    FormHelpers.testInputStatus('passwordConfirmation', "O campo 'passwordConfirmation' está com valor inválido")
 
     cy.getByTestId('submit').should('have.attr', 'disabled')
     cy.getByTestId('error-wrapper').should('not.have.descendants')
@@ -56,10 +57,10 @@ describe('SignUp', () => {
 
     simulateRequestValid()
 
-    FormHelper.testInputStatus('name')
-    FormHelper.testInputStatus('email')
-    FormHelper.testInputStatus('password')
-    FormHelper.testInputStatus('passwordConfirmation')
+    FormHelpers.testInputStatus('name')
+    FormHelpers.testInputStatus('email')
+    FormHelpers.testInputStatus('password')
+    FormHelpers.testInputStatus('passwordConfirmation')
 
     cy.getByTestId('submit').should('not.have.attr', 'disabled')
     cy.getByTestId('error-wrapper').should('not.have.descendants')
@@ -71,8 +72,8 @@ describe('SignUp', () => {
 
     simulateRequestValid()
 
-    FormHelper.testMainError('Email em uso')
-    FormHelper.testURl('/signup')
+    FormHelpers.testMainError('Email em uso')
+    Helpers.testURl('/signup')
   })
 
   it('Should present UnexpectedError any other error', () => {
@@ -81,8 +82,8 @@ describe('SignUp', () => {
 
     simulateRequestValid()
 
-    FormHelper.testMainError('Algo de errado aconteceu, tente novamente mais tarde.')
-    FormHelper.testURl('/signup')
+    FormHelpers.testMainError('Algo de errado aconteceu, tente novamente mais tarde.')
+    Helpers.testURl('/signup')
   })
 
   it('Should save account if valid values are provider', () => {
@@ -96,8 +97,8 @@ describe('SignUp', () => {
       .getByTestId('spinner').should('exist')
       .getByTestId('main-error').should('not.exist')
       .getByTestId('spinner').should('not.exist')
-    FormHelper.testURl('/')
-    FormHelper.testLocalStorageItem('account', JSON.stringify(account))
+    Helpers.testURl('/')
+    Helpers.testLocalStorageItem('account', JSON.stringify(account))
   })
 
   it('Should not calls submit id form is invalid', () => {
@@ -106,7 +107,7 @@ describe('SignUp', () => {
 
     cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
 
-    FormHelper.testHttpCallsCount(0, false)
+    Helpers.testHttpCallsCount(0, false)
   })
 
   it('Should calls submit form when enter pressed', () => {
@@ -119,7 +120,7 @@ describe('SignUp', () => {
     cy.getByTestId('password').focus().type(password)
     cy.getByTestId('passwordConfirmation').focus().type(password).type('{enter}')
 
-    FormHelper.testHttpCallsCount(1)
+    Helpers.testHttpCallsCount(1)
   })
 
   it('Should prevent multiple submit', () => {
@@ -129,6 +130,6 @@ describe('SignUp', () => {
     simulateRequestValid()
     cy.getByTestId('submit').click()
 
-    FormHelper.testHttpCallsCount(1)
+    Helpers.testHttpCallsCount(1)
   })
 })
