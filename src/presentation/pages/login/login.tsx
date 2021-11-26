@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
 import { Authentication } from '@/domain/usecases'
-import { Header, Footer, Input, LoginError, SubmitBtn } from '@/presentation/components'
+import { LoginHeader, Footer, Input, LoginError, SubmitBtn } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation'
 import { FormLoginContext } from '@/presentation/context/form/form-context'
 import styles from './styles.scss'
@@ -62,7 +62,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
 
   return (
     <div className={styles.loginWrapper}>
-      <Header />
+      <LoginHeader />
       <FormLoginContext.Provider value={{ state, setState, mainError, isLoading }}>
         <form data-testid="form" className={styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
