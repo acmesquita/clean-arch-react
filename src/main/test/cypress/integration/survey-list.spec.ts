@@ -33,4 +33,11 @@ describe('SurveyList', () => {
 
     cy.getByTestId('username').should('contain.text', name)
   })
+
+  it('Should logout on logoutLink click', () => {
+    Http.mockUnexpetedError()
+    cy.visit('')
+    cy.getByTestId('logout').click()
+    Helpers.testURl('/login')
+  })
 })
