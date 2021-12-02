@@ -1,8 +1,12 @@
 import faker from 'faker'
-import * as FormHelpers from '../suport/form-helpers'
-import * as Helpers from '../suport/helpers'
-import * as Http from '../suport/login-mock'
-import { mockAccountModel } from '../suport/account-mock'
+import * as FormHelpers from '../utils/form-helpers'
+import * as Helpers from '../utils/helpers'
+import * as HttpHelper from '../utils/http-mocks'
+
+const path = /login/
+const mockInvalidCredentialsError = (): void => HttpHelper.mockUnauthorizedError(path)
+const mockUnexpetedError = (): void => HttpHelper.mockServerError('POST', path)
+const mockSuccess = (): void => HttpHelper.mockOk('POST', path, 'fx:account')
 
 const simulateRequestValid = (): void => {
   cy.getByTestId('email').focus().type(faker.internet.email())
@@ -51,7 +55,7 @@ describe('Login', () => {
   })
 
   it('Should present InvalidPresentError on 401', () => {
-    Http.mockInvalidCredentialsError()
+    mockInvalidCredentialsError()
     cy.visit('login')
 
     simulateRequestValid()
@@ -61,7 +65,7 @@ describe('Login', () => {
   })
 
   it('Should present UnexpectedError any other error', () => {
-    Http.mockUnexpetedError()
+    mockUnexpetedError()
     cy.visit('login')
 
     simulateRequestValid()
@@ -71,8 +75,7 @@ describe('Login', () => {
   })
 
   it('Should save account if valid credentiais are provider', () => {
-    const account = mockAccountModel()
-    Http.mockOk(account.accessToken, account.name)
+    mockSuccess()
     cy.visit('login')
 
     simulateRequestValid()
@@ -81,12 +84,11 @@ describe('Login', () => {
       .getByTestId('spinner').should('exist')
       .getByTestId('main-error').should('not.exist')
       .getByTestId('spinner').should('not.exist')
-    Helpers.testURl('/')
-    Helpers.testLocalStorageItem('account', JSON.stringify(account))
+    Helpers.testLocalStorageItem('account')
   })
 
   it('Should not calls submit id form is invalid', () => {
-    Http.mockOk()
+    mockSuccess()
     cy.visit('login')
 
     cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
@@ -95,7 +97,7 @@ describe('Login', () => {
   })
 
   it('Should calls submit form when enter pressed', () => {
-    Http.mockOk()
+    mockSuccess()
     cy.visit('login')
 
     cy.getByTestId('email').focus().type(faker.internet.email())
@@ -105,7 +107,7 @@ describe('Login', () => {
   })
 
   it('Should prevent multiple submit', () => {
-    Http.mockOk()
+    mockSuccess()
     cy.visit('login')
 
     simulateRequestValid()

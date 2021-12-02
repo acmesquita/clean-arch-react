@@ -1,11 +1,14 @@
-import faker from 'faker'
-import * as Helpers from '../suport/helpers'
-import * as Http from '../suport/survey-list-mock'
-import { mockAccountModel } from '../suport/account-mock'
+import * as Helpers from '../utils/helpers'
+import * as HttpHelper from '../utils/http-mocks'
+
+const mockUnexpetedError = (): void => HttpHelper.mockServerError('GET', /surveys/)
+const mockDeniedError = (): void => HttpHelper.mockForbidenError('GET', /surveys/)
 
 describe('SurveyList', () => {
   beforeEach(() => {
-    Helpers.setLocalStorageItem('account', mockAccountModel())
+    cy.fixture('account').then(account => {
+      Helpers.setLocalStorageItem('account', account)
+    })
   })
 
   afterEach(() => {
@@ -13,21 +16,21 @@ describe('SurveyList', () => {
   })
 
   it('Should present error on UnexpectedError', () => {
-    Http.mockUnexpetedError()
+    mockUnexpetedError()
     cy.visit('')
 
     cy.getByTestId('error').should('contain.text', 'Algo de errado aconteceu, tente novamente mais tarde.')
   })
 
   it('Should logout on AccessDeniedError', () => {
-    Http.mockDeniedError()
+    mockDeniedError()
     cy.visit('')
 
     Helpers.testURl('/login')
   })
 
   it('Should present correct username', () => {
-    Http.mockUnexpetedError()
+    mockUnexpetedError()
     cy.visit('')
     const { name } = Helpers.getLocalStorageItem('account')
 
@@ -35,7 +38,7 @@ describe('SurveyList', () => {
   })
 
   it('Should logout on logoutLink click', () => {
-    Http.mockUnexpetedError()
+    mockUnexpetedError()
     cy.visit('')
     cy.getByTestId('logout').click()
     Helpers.testURl('/login')
