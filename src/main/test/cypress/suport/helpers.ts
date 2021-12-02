@@ -12,3 +12,7 @@ export const testURl = (path: string): void => {
 export const testLocalStorageItem = (key: string, value: any): void => {
   cy.window().then(window => assert.deepEqual(window.localStorage.getItem(key), value))
 }
+
+export const setLocalStorageItem = (key: string, value: any): void => {
+  localStorage.setItem(key, JSON.stringify(value))
+}
