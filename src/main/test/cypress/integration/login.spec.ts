@@ -6,7 +6,7 @@ import * as HttpHelper from '../utils/http-mocks'
 const path = /login/
 const mockInvalidCredentialsError = (): void => HttpHelper.mockUnauthorizedError(path)
 const mockUnexpetedError = (): void => HttpHelper.mockServerError('POST', path)
-const mockSuccess = (): void => HttpHelper.mockOk('POST', path, 'fx:account')
+const mockSuccess = (): void => { cy.fixture('account').then(account => HttpHelper.mockOk('POST', path, account)) }
 
 const simulateRequestValid = (): void => {
   cy.getByTestId('email').focus().type(faker.internet.email())
