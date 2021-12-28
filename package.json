@@ -1,6 +1,6 @@
 {
   "name": "clean-react",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Clean Archetecture in projects React",
   "author": "Catharina Mesquita <catha.ana.1994@gmail.com>",
   "main": "index.js",
@@ -18,7 +18,7 @@
     "test:ci": "yarn test --coverage",
     "test:cypress": "cypress open",
     "test:cypress:run": "cypress run",
-    "test:cypress:ci": "start-serve-and-test dev:base http-get://localhost:8080 test:cypress:run",
+    "test:cypress:ci": "start-server-and-test dev:base http-get://localhost:8080 test:cypress:run",
     "npm:check": "npx npm-check -u -s",
     "prepare": "husky install"
   },
