@@ -1,3 +1,4 @@
+/** @type {import('webpack').Configuration} */
 const { DefinePlugin } = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const { merge } = require('webpack-merge')
@@ -24,6 +25,7 @@ module.exports = merge(common, {
       }
     ]
   },
+  devtool: 'inline-source-map',
   devServer: {
     devMiddleware: {
       writeToDisk: true
