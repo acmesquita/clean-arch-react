@@ -32,7 +32,7 @@ const makeSut = (params?: SutParams): SutTypes => {
 
   render(
     <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
-      <Router history={history}>
+      <Router location={history.location} navigator={history}>
         <SignUp validation={validationStub} addAccount={addAccountSpy} />
       </Router>
     </ApiContext.Provider>
@@ -193,7 +193,6 @@ describe('SignUp Component', () => {
     await simulateValidSubmit()
 
     expect(setCurrentAccountMock).toHaveBeenLastCalledWith(addAccountSpy.account)
-    expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
   })
 
@@ -203,7 +202,6 @@ describe('SignUp Component', () => {
     const loginLink = screen.getByTestId('login')
 
     userEvent.click(loginLink)
-    expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/login')
   })
 })

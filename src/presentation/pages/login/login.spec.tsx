@@ -28,7 +28,7 @@ const makeSut = (errorMessage = null): SutTypes => {
 
   render(
     <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
-      <Router history={history}>
+      <Router location={history.location} navigator={history}>
         <Login validation={validationStub} authentication={authenticationSpy} />
       </Router>
     </ApiContext.Provider>
@@ -155,7 +155,6 @@ describe('Login', () => {
     await waitFor(() => { screen.getByTestId('form') })
 
     expect(setCurrentAccountMock).toHaveBeenCalledWith(authenticationSpy.account)
-    expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
   })
 
@@ -165,7 +164,6 @@ describe('Login', () => {
     const register = screen.getByTestId('register')
 
     userEvent.click(register)
-    expect(history.length).toBe(2)
     expect(history.location.pathname).toBe('/signup')
   })
 })

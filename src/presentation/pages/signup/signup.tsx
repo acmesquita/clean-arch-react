@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AddAccount } from '@/domain/usecases'
 import { LoginHeader, Footer, Input, LoginError, SubmitBtn } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation'
@@ -14,7 +14,7 @@ type Props = {
 
 const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
   const { setCurrentAccount } = useContext(ApiContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   const [mainError, setMainError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -62,7 +62,7 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
       })
 
       setCurrentAccount(account)
-      history.replace('/')
+      navigate('/')
     } catch (error) {
       setIsLoading(false)
       setMainError(error.message)
@@ -80,7 +80,7 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
           <Input type="password" name="password" id="password" placeholder="Digite sua senha" />
           <Input type="password" name="passwordConfirmation" id="passwordConfirmation" placeholder="Confirme sua senha" />
           <SubmitBtn>Criar conta</SubmitBtn>
-          <Link replace to="login" data-testid="login" className={styles.link}>Voltar para o Login</Link>
+          <Link replace to="/login" data-testid="login" className={styles.link}>Voltar para o Login</Link>
 
           <LoginError />
         </form>

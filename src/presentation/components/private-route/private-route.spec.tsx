@@ -14,10 +14,10 @@ const makeSut = (account = mockAccountModel()): SutTypes => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
   render(
     <ApiContext.Provider value={{ getCurrentAccount: () => account }}>
-      <Router history={history}>
-        <PrivateRoute />
+      <Router location={history.location} navigator={history}>
+        <PrivateRoute path='*' />
       </Router>
-    </ApiContext.Provider>
+    </ApiContext.Provider >
   )
 
   return {

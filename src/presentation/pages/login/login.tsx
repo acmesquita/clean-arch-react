@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { Authentication } from '@/domain/usecases'
 import { LoginHeader, Footer, Input, LoginError, SubmitBtn } from '@/presentation/components'
@@ -15,7 +15,7 @@ type Props = {
 
 const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const { setCurrentAccount } = useContext(ApiContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   const [mainError, setMainError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -50,7 +50,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       })
 
       setCurrentAccount(account)
-      history.replace('/')
+      navigate('/')
     } catch (error) {
       setIsLoading(false)
       setMainError(error.message)
@@ -66,7 +66,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" id="password" placeholder="Digite sua senha" />
           <SubmitBtn>Entrar</SubmitBtn>
-          <Link to="signup" data-testid="register" className={styles.link}>Criar conta</Link>
+          <Link to="/signup" data-testid="register" className={styles.link}>Criar conta</Link>
 
           <LoginError />
         </form>
